@@ -93,6 +93,59 @@ build/Ouroboros.o: Ouroboros.cpp \
  ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
  ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h \
+ ../../DaisySP/Source/daisysp.h ../../DaisySP/Source/Control/adenv.h \
+ ../../DaisySP/Source/Control/adsr.h \
+ ../../DaisySP/Source/Control/phasor.h \
+ ../../DaisySP/Source/Drums/analogbassdrum.h \
+ ../../DaisySP/Source/Synthesis/oscillator.h \
+ ../../DaisySP/Source/Utility/dsp.h ../../DaisySP/Source/Filters/svf.h \
+ ../../DaisySP/Source/Drums/analogsnaredrum.h \
+ ../../DaisySP/Source/Drums/hihat.h \
+ ../../DaisySP/Source/Drums/synthbassdrum.h \
+ ../../DaisySP/Source/Drums/synthsnaredrum.h \
+ ../../DaisySP/Source/Dynamics/crossfade.h \
+ ../../DaisySP/Source/Dynamics/limiter.h \
+ ../../DaisySP/Source/Effects/autowah.h \
+ ../../DaisySP/Source/Effects/chorus.h \
+ ../../DaisySP/Source/Utility/delayline.h \
+ ../../DaisySP/Source/Effects/decimator.h \
+ ../../DaisySP/Source/Effects/flanger.h \
+ ../../DaisySP/Source/Effects/overdrive.h \
+ ../../DaisySP/Source/Effects/pitchshifter.h \
+ ../../DaisySP/Source/Effects/phaser.h \
+ ../../DaisySP/Source/Effects/sampleratereducer.h \
+ ../../DaisySP/Source/Effects/tremolo.h \
+ ../../DaisySP/Source/Effects/wavefolder.h \
+ ../../DaisySP/Source/Utility/dcblock.h \
+ ../../DaisySP/Source/Effects/reverbsc.h \
+ ../../DaisySP/Source/Filters/onepole.h \
+ ../../DaisySP/Source/Filters/fir.h ../../DaisySP/Source/Filters/soap.h \
+ ../../DaisySP/Source/Noise/clockednoise.h \
+ ../../DaisySP/Source/Noise/dust.h \
+ ../../DaisySP/Source/Noise/fractal_noise.h \
+ ../../DaisySP/Source/Noise/grainlet.h \
+ ../../DaisySP/Source/Noise/particle.h \
+ ../../DaisySP/Source/Noise/whitenoise.h \
+ ../../DaisySP/Source/PhysicalModeling/drip.h \
+ ../../DaisySP/Source/PhysicalModeling/KarplusString.h \
+ ../../DaisySP/Source/Filters/onepole.h \
+ ../../DaisySP/Source/PhysicalModeling/modalvoice.h \
+ ../../DaisySP/Source/PhysicalModeling/resonator.h \
+ ../../DaisySP/Source/PhysicalModeling/stringvoice.h \
+ ../../DaisySP/Source/Sampling/granularplayer.h \
+ ../../DaisySP/Source/Synthesis/fm2.h \
+ ../../DaisySP/Source/Synthesis/formantosc.h \
+ ../../DaisySP/Source/Synthesis/harmonic_osc.h \
+ ../../DaisySP/Source/Synthesis/oscillatorbank.h \
+ ../../DaisySP/Source/Synthesis/variablesawosc.h \
+ ../../DaisySP/Source/Synthesis/variableshapeosc.h \
+ ../../DaisySP/Source/Synthesis/vosim.h \
+ ../../DaisySP/Source/Synthesis/zoscillator.h \
+ ../../DaisySP/Source/Utility/looper.h \
+ ../../DaisySP/Source/Utility/maytrig.h \
+ ../../DaisySP/Source/Utility/metro.h \
+ ../../DaisySP/Source/Utility/samplehold.h \
+ ../../DaisySP/Source/Utility/smooth_random.h \
  ../../libDaisy/src/daisy_seed.h ../../libDaisy/src/daisy.h \
  ../../libDaisy/src/daisy_core.h ../../libDaisy/src/version.h \
  ../../libDaisy/src/sys/system.h ../../libDaisy/src/per/tim.h \
@@ -238,6 +291,62 @@ build/Ouroboros.o: Ouroboros.cpp \
 ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
 ../../libDaisy/Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_hcd.h:
+../../DaisySP/Source/daisysp.h:
+../../DaisySP/Source/Control/adenv.h:
+../../DaisySP/Source/Control/adsr.h:
+../../DaisySP/Source/Control/phasor.h:
+../../DaisySP/Source/Drums/analogbassdrum.h:
+../../DaisySP/Source/Synthesis/oscillator.h:
+../../DaisySP/Source/Utility/dsp.h:
+../../DaisySP/Source/Filters/svf.h:
+../../DaisySP/Source/Drums/analogsnaredrum.h:
+../../DaisySP/Source/Drums/hihat.h:
+../../DaisySP/Source/Drums/synthbassdrum.h:
+../../DaisySP/Source/Drums/synthsnaredrum.h:
+../../DaisySP/Source/Dynamics/crossfade.h:
+../../DaisySP/Source/Dynamics/limiter.h:
+../../DaisySP/Source/Effects/autowah.h:
+../../DaisySP/Source/Effects/chorus.h:
+../../DaisySP/Source/Utility/delayline.h:
+../../DaisySP/Source/Effects/decimator.h:
+../../DaisySP/Source/Effects/flanger.h:
+../../DaisySP/Source/Effects/overdrive.h:
+../../DaisySP/Source/Effects/pitchshifter.h:
+../../DaisySP/Source/Effects/phaser.h:
+../../DaisySP/Source/Effects/sampleratereducer.h:
+../../DaisySP/Source/Effects/tremolo.h:
+../../DaisySP/Source/Effects/wavefolder.h:
+../../DaisySP/Source/Utility/dcblock.h:
+../../DaisySP/Source/Effects/reverbsc.h:
+../../DaisySP/Source/Filters/onepole.h:
+../../DaisySP/Source/Filters/fir.h:
+../../DaisySP/Source/Filters/soap.h:
+../../DaisySP/Source/Noise/clockednoise.h:
+../../DaisySP/Source/Noise/dust.h:
+../../DaisySP/Source/Noise/fractal_noise.h:
+../../DaisySP/Source/Noise/grainlet.h:
+../../DaisySP/Source/Noise/particle.h:
+../../DaisySP/Source/Noise/whitenoise.h:
+../../DaisySP/Source/PhysicalModeling/drip.h:
+../../DaisySP/Source/PhysicalModeling/KarplusString.h:
+../../DaisySP/Source/Filters/onepole.h:
+../../DaisySP/Source/PhysicalModeling/modalvoice.h:
+../../DaisySP/Source/PhysicalModeling/resonator.h:
+../../DaisySP/Source/PhysicalModeling/stringvoice.h:
+../../DaisySP/Source/Sampling/granularplayer.h:
+../../DaisySP/Source/Synthesis/fm2.h:
+../../DaisySP/Source/Synthesis/formantosc.h:
+../../DaisySP/Source/Synthesis/harmonic_osc.h:
+../../DaisySP/Source/Synthesis/oscillatorbank.h:
+../../DaisySP/Source/Synthesis/variablesawosc.h:
+../../DaisySP/Source/Synthesis/variableshapeosc.h:
+../../DaisySP/Source/Synthesis/vosim.h:
+../../DaisySP/Source/Synthesis/zoscillator.h:
+../../DaisySP/Source/Utility/looper.h:
+../../DaisySP/Source/Utility/maytrig.h:
+../../DaisySP/Source/Utility/metro.h:
+../../DaisySP/Source/Utility/samplehold.h:
+../../DaisySP/Source/Utility/smooth_random.h:
 ../../libDaisy/src/daisy_seed.h:
 ../../libDaisy/src/daisy.h:
 ../../libDaisy/src/daisy_core.h:

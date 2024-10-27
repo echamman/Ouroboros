@@ -42,6 +42,7 @@
 #include "Effects/sampleratereducer.h"
 #include "Effects/tremolo.h"
 #include "Effects/wavefolder.h"
+#include "Effects/reverbsc.h"
 
 /** Filter Modules */
 #include "Filters/onepole.h"

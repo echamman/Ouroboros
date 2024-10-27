@@ -1,11 +1,9 @@
-# Blink
+# Ouroboros V1
 
 ## Author
 
-Shensley
+Ethan
 
 ## Description
 
-Blinks the Seed's onboard LED at a constant rate.
-
-[Source Code](https://github.com/electro-smith/DaisyExamples/tree/master/seed/Blink)
+The breadboard circuit of Ouroboros

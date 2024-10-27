@@ -7,6 +7,7 @@ CPP_SOURCES = Ouroboros.cpp
 # Library Locations
 LIBDAISY_DIR = ../../libDaisy
 DAISYSP_DIR = ../../DaisySP
+CLOUDSEED_DIR = ../../CloudSeedCore-master
 
 # Core location, and generic makefile.
 SYSTEM_FILES_DIR = $(LIBDAISY_DIR)/core
