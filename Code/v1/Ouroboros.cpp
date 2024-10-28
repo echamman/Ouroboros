@@ -16,10 +16,12 @@ using namespace daisy;
 // Declare a DaisySeed object called hardware
 DaisySeed hw;
 
+AdcChannelConfig adcConfig[1];
+
 // Helper Modules
 static AdEnv      env;
 static Oscillator osc;
-static Metro      tick;
+static Metro      tick;  
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
@@ -31,20 +33,6 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
     float osc_out, env_out, feedback, del_out, sig_out;
     for(size_t i = 0; i < size; i += 2)
     {
-        // When the Metro ticks:
-        // trigger the envelope to start, and change freq of oscillator.
-        if(tick.Process())
-        {
-            float freq = rand() % 200;
-            osc.SetFreq(freq + 100.0f);
-            env.Trigger();
-        }
-
-        // Use envelope to control the amplitude of the oscillator.
-        env_out = env.Process();
-        osc.SetAmp(env_out);
-        osc_out = osc.Process();
-
         // Read from delay line
         del_out = del.Read();
         // Calculate output and feedback
@@ -76,27 +64,22 @@ int main(void)
     osc.Init(sample_rate);
     del.Init();
 
+    adcConfig[0].InitSingle(hw.GetPin(21));
+
+    //Initialize the adc with the config we just made
+    hw.adc.Init(adcConfig, 1);
+
     // Set up Metro to pulse every second
     tick.Init(1.0f, sample_rate);
-
-    // set adenv parameters
-    env.SetTime(ADENV_SEG_ATTACK, 0.001);
-    env.SetTime(ADENV_SEG_DECAY, 0.50);
-    env.SetMin(0.0);
-    env.SetMax(0.25);
-    env.SetCurve(0); // linear
-
-    // Set parameters for oscillator
-    osc.SetWaveform(osc.WAVE_TRI);
-    osc.SetFreq(220);
-    osc.SetAmp(0.25);
 
     // Set Delay time to 0.75 seconds
     del.SetDelay(sample_rate * 0.2f);
 
-
     // start callback
+    hw.adc.Start();
     hw.StartAudio(AudioCallback);
+
+    uint32_t potVal;
 
     // Loop forever
     for(;;)
@@ -107,7 +90,13 @@ int main(void)
         // Toggle the LED state for the next time around.
         led_state = !led_state;
 
+        potVal = (int)floor(hw.adc.GetFloat(0)*100.00f);
+
+        del.SetDelay(sample_rate * (hw.adc.GetFloat(0)+0.02f));
+
         // Wait 500ms
-        System::Delay(500);
+        // System::Delay((uint32_t)floor(hw.adc.GetFloat(0)*500.0f));
+        System::Delay(potVal);
+        System::Delay(50);
     }
 }
