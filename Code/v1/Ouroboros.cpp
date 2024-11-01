@@ -1,5 +1,6 @@
 #include "daisysp.h"
 #include "daisy_seed.h"
+#include "src/OLED.h"
 
 // Interleaved audio definitions
 #define LEFT (i)
@@ -8,23 +9,33 @@
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 0.75f)
 
-// Use the daisy namespace to prevent having to type
-// daisy:: before all libdaisy functions
+enum AdcChannel {
+    Knob0 = 0,
+    Knob1,
+    Knob2,
+    Knob3,
+    NUM_ADC_CHANNELS
+};
+
+enum Switches {
+    Switch0 = 0,
+    NUM_SWITCHES
+};
+
 using namespace daisysp;
 using namespace daisy;
 
 // Declare a DaisySeed object called hardware
 DaisySeed hw;
 
-AdcChannelConfig adcConfig[1];
-
-// Helper Modules
-static AdEnv      env;
-static Oscillator osc;
-static Metro      tick;  
+AdcChannelConfig adcConfig[NUM_ADC_CHANNELS];
+Switch buttons[NUM_SWITCHES];
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
+
+// OLED Screen 
+static Oled display;
 
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
@@ -54,6 +65,8 @@ int main(void)
     bool led_state;
     led_state = true;
 
+    string dLines[6]; //Create an Array of strings for the OLED display
+
     // initialize seed hardware and daisysp modules
     float sample_rate;
     hw.Configure();
@@ -62,13 +75,17 @@ int main(void)
     sample_rate = hw.AudioSampleRate();
     del.Init();
 
-    adcConfig[0].InitSingle(hw.GetPin(21));
+    // Initialize knobs
+    adcConfig[Knob0].InitSingle(hw.GetPin(15));
+    adcConfig[Knob1].InitSingle(hw.GetPin(16));
+    adcConfig[Knob2].InitSingle(hw.GetPin(17));
+    adcConfig[Knob3].InitSingle(hw.GetPin(18));
+
+    // Initialize Buttons
+    buttons[Switch0].Init(hw.GetPin(25), 1000);
 
     //Initialize the adc with the config we just made
-    hw.adc.Init(adcConfig, 1);
-
-    // Set up Metro to pulse every second
-    tick.Init(1.0f, sample_rate);
+    hw.adc.Init(adcConfig, NUM_ADC_CHANNELS);
 
     // Set Delay time to 0.75 seconds
     del.SetDelay(sample_rate * 0.2f);
@@ -76,6 +93,12 @@ int main(void)
     // start callback
     hw.adc.Start();
     hw.StartAudio(AudioCallback);
+
+    //Allow the OLED to start up
+    System::Delay(100);
+    /** And Initialize */
+    display.Init(&hw);
+    System::Delay(2000);
 
     uint32_t potVal;
 
@@ -85,16 +108,28 @@ int main(void)
         // Set the onboard LED
         hw.SetLed(led_state);
 
+        //Debounce the button
+        buttons[Switch0].Debounce();
+
         // Toggle the LED state for the next time around.
         led_state = !led_state;
 
         potVal = (int)floor(hw.adc.GetFloat(0)*100.00f);
 
-        del.SetDelay(sample_rate * (hw.adc.GetFloat(0)+0.02f));
+        del.SetDelay(sample_rate * (hw.adc.GetFloat(Knob0)+0.02f));
 
         // Wait 500ms
         // System::Delay((uint32_t)floor(hw.adc.GetFloat(0)*500.0f));
         System::Delay(potVal);
         System::Delay(50);
+
+        //Print to display
+        dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
+        dLines[1] = "Knob 1: " + std::to_string((int)floor(hw.adc.GetFloat(Knob1)*100.00f));
+        dLines[2] = "Knob 2: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
+        dLines[3] = "Knob 3: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
+        (buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
+        dLines[5] = "";
+        display.print(dLines, 6);
     }
 }
