@@ -30,7 +30,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
 {
-    float osc_out, env_out, feedback, del_out, sig_out;
+    float feedback, del_out, sig_out;
     for(size_t i = 0; i < size; i += 2)
     {
         // Read from delay line
@@ -60,8 +60,6 @@ int main(void)
     hw.Init();
     hw.SetAudioBlockSize(4);
     sample_rate = hw.AudioSampleRate();
-    env.Init(sample_rate);
-    osc.Init(sample_rate);
     del.Init();
 
     adcConfig[0].InitSingle(hw.GetPin(21));
