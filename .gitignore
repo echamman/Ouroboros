@@ -3,4 +3,5 @@
 /libDaisy
 /stmlib
 /Code/v1/build/
+/Code/v1/.vscode/
 *.code-workspace
