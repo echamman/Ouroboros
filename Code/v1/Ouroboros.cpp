@@ -6,6 +6,9 @@
 #define LEFT (i)
 #define RIGHT (i + 1)
 
+// For DEBUGGING
+CpuLoadMeter loadMeter;
+
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 0.75f)
 
@@ -48,6 +51,9 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
 {
+
+    loadMeter.OnBlockStart();
+
     float feedback, del_out, sig_out, verb_outL, verb_outR;
 
     for(size_t i = 0; i < size; i += 2)
@@ -68,6 +74,8 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         out[LEFT]  = (1-verbBlend)*sig_out + verbBlend*verb_outL;
         out[RIGHT] = (1-verbBlend)*sig_out + verbBlend*verb_outR;
     }
+
+    loadMeter.OnBlockEnd();
 }
 
 int main(void)
@@ -106,6 +114,9 @@ int main(void)
     // Initialize Metro at 100Hz
     tick.Init(100, sample_rate);
 
+    // initialize the load meter so that it knows what time is available for the processing:
+    loadMeter.Init(hw.AudioSampleRate(), hw.AudioBlockSize());
+
     // start callback
     hw.adc.Start();
     hw.StartAudio(AudioCallback);
@@ -119,33 +130,41 @@ int main(void)
     // Loop forever
     for(;;)
     {
+
+        // get the current load (smoothed value and peak values)
+        const float avgLoad = loadMeter.GetAvgCpuLoad();
+        const float maxLoad = loadMeter.GetMaxCpuLoad();
+        const float minLoad = loadMeter.GetMinCpuLoad();
+
         // Set the onboard LED
         hw.SetLed(led_state);
 
         //Debounce the button
         buttons[Switch0].Debounce();
 
-        // Toggle the LED state for the next time around.
-        led_state = !led_state;
+        // Read knob positions and scale
+        // TODO
 
         // Set delay to value between 1 and 103ms, set metro to freq
-        del.SetDelay(sample_rate * (hw.adc.GetFloat(Knob0)+0.03f));
-        tick.SetFreq(sample_rate * (hw.adc.GetFloat(Knob0)+0.03f));
+        del.SetDelay(sample_rate * (std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f));
+        tick.SetFreq(sample_rate * (std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f));
         
-        verb.SetFeedback(hw.adc.GetFloat(Knob1));
-        verbBlend = hw.adc.GetFloat(Knob2);
+        verb.SetFeedback(std::trunc(hw.adc.GetFloat(Knob1)*100.0f)/100.0f);
+        verbBlend = std::trunc(hw.adc.GetFloat(Knob2)*100.0f)/100.0f;
 
         //Print to display
         dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
         dLines[1] = "Knob 1: " + std::to_string((int)floor(hw.adc.GetFloat(Knob1)*100.00f));
         dLines[2] = "Knob 2: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
         dLines[3] = "Knob 3: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
-        (buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
+        //(buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
+        dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
         dLines[5] = "";
         display.print(dLines, 6);
 
         if(tick.Process()){
             led_state = !led_state;
         }
+        System::Delay(100);
     }
 }
