@@ -34,6 +34,13 @@ Switch buttons[NUM_SWITCHES];
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
 
+// Create ReverbSc, load it to SDRAM
+static ReverbSc DSY_SDRAM_BSS verb;
+float verbBlend;
+
+// Metro 
+static Metro tick;
+
 // OLED Screen 
 static Oled display;
 
@@ -41,7 +48,8 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
 {
-    float feedback, del_out, sig_out;
+    float feedback, del_out, sig_out, verb_outL, verb_outR;
+
     for(size_t i = 0; i < size; i += 2)
     {
         // Read from delay line
@@ -53,9 +61,12 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         // Write to the delay
         del.Write(feedback);
 
+        // Reverb writes to output
+        verb.Process(sig_out, sig_out, &verb_outL, &verb_outR);
+
         // Output
-        out[LEFT]  = sig_out;
-        out[RIGHT] = sig_out;
+        out[LEFT]  = (1-verbBlend)*sig_out + verbBlend*verb_outL;
+        out[RIGHT] = (1-verbBlend)*sig_out + verbBlend*verb_outR;
     }
 }
 
@@ -74,6 +85,8 @@ int main(void)
     hw.SetAudioBlockSize(4);
     sample_rate = hw.AudioSampleRate();
     del.Init();
+    verb.Init(sample_rate);
+    verb.SetLpFreq(18000.0f);
 
     // Initialize knobs
     adcConfig[Knob0].InitSingle(hw.GetPin(15));
@@ -90,6 +103,9 @@ int main(void)
     // Set Delay time to 0.75 seconds
     del.SetDelay(sample_rate * 0.2f);
 
+    // Initialize Metro at 100Hz
+    tick.Init(100, sample_rate);
+
     // start callback
     hw.adc.Start();
     hw.StartAudio(AudioCallback);
@@ -99,8 +115,6 @@ int main(void)
     /** And Initialize */
     display.Init(&hw);
     System::Delay(2000);
-
-    uint32_t potVal;
 
     // Loop forever
     for(;;)
@@ -114,14 +128,12 @@ int main(void)
         // Toggle the LED state for the next time around.
         led_state = !led_state;
 
-        potVal = (int)floor(hw.adc.GetFloat(0)*100.00f);
-
-        del.SetDelay(sample_rate * (hw.adc.GetFloat(Knob0)+0.02f));
-
-        // Wait 500ms
-        // System::Delay((uint32_t)floor(hw.adc.GetFloat(0)*500.0f));
-        System::Delay(potVal);
-        System::Delay(50);
+        // Set delay to value between 1 and 103ms, set metro to freq
+        del.SetDelay(sample_rate * (hw.adc.GetFloat(Knob0)+0.03f));
+        tick.SetFreq(sample_rate * (hw.adc.GetFloat(Knob0)+0.03f));
+        
+        verb.SetFeedback(hw.adc.GetFloat(Knob1));
+        verbBlend = hw.adc.GetFloat(Knob2);
 
         //Print to display
         dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
@@ -131,5 +143,9 @@ int main(void)
         (buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
         dLines[5] = "";
         display.print(dLines, 6);
+
+        if(tick.Process()){
+            led_state = !led_state;
+        }
     }
 }
