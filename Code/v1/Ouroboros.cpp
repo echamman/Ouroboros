@@ -28,11 +28,19 @@ enum Switches {
 using namespace daisysp;
 using namespace daisy;
 
+// Function declarations
+int OuroborosInit();
+void updateDelay();
+void updateReverb();
+
 // Declare a DaisySeed object called hardware
 DaisySeed hw;
 
 AdcChannelConfig adcConfig[NUM_ADC_CHANNELS];
 Switch buttons[NUM_SWITCHES];
+
+// Global variable holds sample rate
+float sample_rate;
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
@@ -84,10 +92,50 @@ int main(void)
     bool led_state;
     led_state = true;
 
+    OuroborosInit();
+
     string dLines[6]; //Create an Array of strings for the OLED display
 
+    // Loop forever
+    for(;;)
+    {
+
+        // get the current load (smoothed value and peak values)
+        const float avgLoad = loadMeter.GetAvgCpuLoad();
+        const float maxLoad = loadMeter.GetMaxCpuLoad();
+        const float minLoad = loadMeter.GetMinCpuLoad();
+
+        // Set the onboard LED
+        hw.SetLed(led_state);
+
+        //Debounce the button
+        buttons[Switch0].Debounce();
+
+        // Read inputs and update delay and verb variables
+        updateDelay();
+        updateReverb();
+
+        //Print to display
+        dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
+        dLines[1] = "Knob 1: " + std::to_string((int)floor(hw.adc.GetFloat(Knob1)*100.00f));
+        dLines[2] = "Knob 2: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
+        dLines[3] = "Knob 3: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
+        //(buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
+        dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
+        dLines[5] = "";
+        display.print(dLines, 6);
+
+        if(tick.Process()){
+            led_state = !led_state;
+        }
+        System::Delay(100);
+    }
+}
+
+// Initializes everything in the system
+int OuroborosInit(){
+
     // initialize seed hardware and daisysp modules
-    float sample_rate;
     hw.Configure();
     hw.Init();
     hw.SetAudioBlockSize(4);
@@ -127,44 +175,26 @@ int main(void)
     display.Init(&hw);
     System::Delay(2000);
 
-    // Loop forever
-    for(;;)
-    {
+    return 1;
+}
 
-        // get the current load (smoothed value and peak values)
-        const float avgLoad = loadMeter.GetAvgCpuLoad();
-        const float maxLoad = loadMeter.GetMaxCpuLoad();
-        const float minLoad = loadMeter.GetMinCpuLoad();
+void updateDelay(){
+    // Read and scale appropriate knobs
+    // Read knob as float (0-0.99), truncate to two decimal points, add 0.03f because below that it sounds bad
+    float delayTime = std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f;
+    
+    // Set delay to value between 1 and 103ms, set metro to freq
+    del.SetDelay(sample_rate * (delayTime));
+    tick.SetFreq(1.0f/(delayTime));
+}
 
-        // Set the onboard LED
-        hw.SetLed(led_state);
+void updateReverb(){
 
-        //Debounce the button
-        buttons[Switch0].Debounce();
+    // Read and scale appropriate knobs
+    // Truncates the pot reading to 2 decimal points
+    float rFDBK = std::trunc(hw.adc.GetFloat(Knob1)*100.0f)/100.0f;
+    float rBlend = std::trunc(hw.adc.GetFloat(Knob2)*100.0f)/100.0f;
 
-        // Read knob positions and scale
-        // TODO
-
-        // Set delay to value between 1 and 103ms, set metro to freq
-        del.SetDelay(sample_rate * (std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f));
-        tick.SetFreq(sample_rate * (std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f));
-        
-        verb.SetFeedback(std::trunc(hw.adc.GetFloat(Knob1)*100.0f)/100.0f);
-        verbBlend = std::trunc(hw.adc.GetFloat(Knob2)*100.0f)/100.0f;
-
-        //Print to display
-        dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
-        dLines[1] = "Knob 1: " + std::to_string((int)floor(hw.adc.GetFloat(Knob1)*100.00f));
-        dLines[2] = "Knob 2: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
-        dLines[3] = "Knob 3: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
-        //(buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
-        dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
-        dLines[5] = "";
-        display.print(dLines, 6);
-
-        if(tick.Process()){
-            led_state = !led_state;
-        }
-        System::Delay(100);
-    }
+    verb.SetFeedback(rFDBK);
+    verbBlend = rBlend;
 }
