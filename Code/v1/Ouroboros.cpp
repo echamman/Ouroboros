@@ -1,6 +1,7 @@
 #include "daisysp.h"
 #include "daisy_seed.h"
-#include "src/OLED.h"
+#include "src/OLED/OLED.h"
+#include "src/Presets/presets.h"
 
 // Interleaved audio definitions
 #define LEFT (i)
@@ -32,6 +33,7 @@ using namespace daisy;
 int OuroborosInit();
 void updateDelay();
 void updateReverb();
+void updateFlutter();
 
 // Declare a DaisySeed object called hardware
 DaisySeed hw;
@@ -42,6 +44,14 @@ Switch buttons[NUM_SWITCHES];
 // Global variable holds sample rate
 float sample_rate;
 
+// Global variables TO BE MOVED
+float delaytime = 0.0f;
+float delayFDBK = 0.75f;
+float delaybuf[5] = { };
+float reverbtime = 0.0f;
+// Declare a variable to store the state we want to set for the LED.
+bool led_state = false;
+
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
 
@@ -49,11 +59,17 @@ static DelayLine<float, MAX_DELAY> del;
 static ReverbSc DSY_SDRAM_BSS verb;
 float verbBlend;
 
+// Create chorus for a flutter effect
+static Chorus flutter;
+
 // Metro 
 static Metro tick;
 
 // OLED Screen 
 static Oled display;
+
+// Preset Manager
+static presets presetManager;
 
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
@@ -62,25 +78,33 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
     loadMeter.OnBlockStart();
 
-    float feedback, del_out, sig_out, verb_outL, verb_outR;
+    if(tick.Process()){
+        led_state = !led_state;
+    }
+
+    float feedback, del_out, sig_outL, sig_outR, verb_outL, verb_outR;
 
     for(size_t i = 0; i < size; i += 2)
     {
         // Read from delay line
         del_out = del.Read();
         // Calculate output and feedback
-        sig_out  = del_out + in[i];
-        feedback = (del_out * 0.75f) + in[i];
+        sig_outL  = del_out + in[i];
+        feedback = (del_out * delayFDBK) + in[i];
 
         // Write to the delay
         del.Write(feedback);
+        flutter.Process(sig_outL);
+
+        //sig_outL = flutter.GetLeft();
+        //sig_outR = flutter.GetRight();
 
         // Reverb writes to output
-        verb.Process(sig_out, sig_out, &verb_outL, &verb_outR);
+        verb.Process(sig_outL, sig_outL, &verb_outL, &verb_outR);
 
         // Output
-        out[LEFT]  = (1-verbBlend)*sig_out + verbBlend*verb_outL;
-        out[RIGHT] = (1-verbBlend)*sig_out + verbBlend*verb_outR;
+        out[LEFT]  = (1-verbBlend)*sig_outL + verbBlend*verb_outL;
+        out[RIGHT] = (1-verbBlend)*sig_outL + verbBlend*verb_outR;
     }
 
     loadMeter.OnBlockEnd();
@@ -88,9 +112,6 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
 int main(void)
 {
-    // Declare a variable to store the state we want to set for the LED.
-    bool led_state;
-    led_state = true;
 
     OuroborosInit();
 
@@ -115,20 +136,21 @@ int main(void)
         updateDelay();
         updateReverb();
 
+        if(buttons[Switch0].FallingEdge()){
+            presetManager.nextPreset();
+        }
+
         //Print to display
-        dLines[0] = "Knob 0: " + std::to_string((int)floor(hw.adc.GetFloat(Knob0)*100.00f));
-        dLines[1] = "Knob 1: " + std::to_string((int)floor(hw.adc.GetFloat(Knob1)*100.00f));
-        dLines[2] = "Knob 2: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
-        dLines[3] = "Knob 3: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
+        dLines[0] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms";
+        dLines[1] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
+        dLines[2] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
+        dLines[3] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
         //(buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
-        dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
+        //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
+        dLines[4] = "Preset: " + presetManager.getPresetName();
         dLines[5] = "";
         display.print(dLines, 6);
 
-        if(tick.Process()){
-            led_state = !led_state;
-        }
-        System::Delay(100);
     }
 }
 
@@ -159,8 +181,14 @@ int OuroborosInit(){
     // Set Delay time to 0.75 seconds
     del.SetDelay(sample_rate * 0.2f);
 
+    // Initialize Flutter
+    flutter.Init(sample_rate);
+    flutter.SetLfoFreq(.33f, .2f);
+    flutter.SetLfoDepth(1.f, 1.f);
+    flutter.SetDelay(.75f, .9f);
+
     // Initialize Metro at 100Hz
-    tick.Init(100, sample_rate);
+    tick.Init(10.0f, sample_rate);
 
     // initialize the load meter so that it knows what time is available for the processing:
     loadMeter.Init(hw.AudioSampleRate(), hw.AudioBlockSize());
@@ -179,22 +207,49 @@ int OuroborosInit(){
 }
 
 void updateDelay(){
+
+    float min = presetManager.getDelayMin();
+    float range = presetManager.getDelayRange();
+
     // Read and scale appropriate knobs
-    // Read knob as float (0-0.99), truncate to two decimal points, add 0.03f because below that it sounds bad
-    float delayTime = std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f+0.03f;
+    // Read knob as float (0-0.99), truncate to two decimal points
+    float delayKnob = std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f;
     
-    // Set delay to value between 1 and 103ms, set metro to freq
-    del.SetDelay(sample_rate * (delayTime));
-    tick.SetFreq(1.0f/(delayTime));
+    for(int i = 3; i >= 0; i--){
+        delaybuf[i+1] = delaybuf[i];
+    }
+
+    delaybuf[0] = delayKnob;
+
+    // Only update delay if knob has been turned sufficiently
+    if( delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
+        delaytime = min + (delayKnob * range);
+        
+        // Set delay to value between 1 and 103ms, set metro to freq
+        del.SetDelay(sample_rate * (delaytime));
+        
+        // Set tick 1/delay time * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
+        tick.SetFreq(8.0f/delaytime); 
+    }
 }
 
 void updateReverb(){
 
+    float min = presetManager.getReverbFDBKMin();
+    float range = presetManager.getReverbFDBKRange();
+
     // Read and scale appropriate knobs
     // Truncates the pot reading to 2 decimal points
     float rFDBK = std::trunc(hw.adc.GetFloat(Knob1)*100.0f)/100.0f;
+    rFDBK = min + (rFDBK * range); 
+    delayFDBK = rFDBK;
+
     float rBlend = std::trunc(hw.adc.GetFloat(Knob2)*100.0f)/100.0f;
 
     verb.SetFeedback(rFDBK);
     verbBlend = rBlend;
+}
+
+void updateFlutter(){
+    return;
 }

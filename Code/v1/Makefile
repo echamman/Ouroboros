@@ -2,7 +2,7 @@
 TARGET = Ouroboros
 
 # Sources
-CPP_SOURCES = Ouroboros.cpp src/OLED.cpp
+CPP_SOURCES = Ouroboros.cpp src/OLED/OLED.cpp src/Presets/presets.cpp
 
 # Library Locations
 LIBDAISY_DIR = ../../libDaisy
