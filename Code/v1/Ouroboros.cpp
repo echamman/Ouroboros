@@ -14,15 +14,18 @@ CpuLoadMeter loadMeter;
 #define MAX_DELAY static_cast<size_t>(48000 * 0.75f)
 
 enum AdcChannel {
-    Knob0 = 0,
-    Knob1,
-    Knob2,
-    Knob3,
+    rateKnob = 0,
+    fdbkKnob,
+    spaceKnob,
+    wowKnob,
+    blendKnob,
     NUM_ADC_CHANNELS
 };
 
 enum Switches {
-    Switch0 = 0,
+    programSw = 0,
+    divisionSw,
+    tempoSw,
     NUM_SWITCHES
 };
 
@@ -49,6 +52,12 @@ float delaytime = 0.0f;
 float delayFDBK = 0.75f;
 float delaybuf[5] = { };
 float reverbtime = 0.0f;
+int divisions = 1;
+float wow = 0.0f;
+// Officially Space
+float verbBlend;
+// Blends delay and wow
+float wetBlend;
 // Declare a variable to store the state we want to set for the LED.
 bool led_state = false;
 
@@ -57,7 +66,6 @@ static DelayLine<float, MAX_DELAY> del;
 
 // Create ReverbSc, load it to SDRAM
 static ReverbSc DSY_SDRAM_BSS verb;
-float verbBlend;
 
 // Create chorus for a flutter effect
 static Chorus flutter;
@@ -82,25 +90,33 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         led_state = !led_state;
     }
 
-    float feedback, del_out, sig_outL, sig_outR, verb_outL, verb_outR;
+    float feedback, del_out, sig_outL, sig_outR;
+    float verb_outL, verb_outR, wow_outL, wow_outR;
+    float wow_del_outL, wow_del_outR;
 
     for(size_t i = 0; i < size; i += 2)
     {
         // Read from delay line
         del_out = del.Read();
         // Calculate output and feedback
-        sig_outL  = del_out + in[i];
-        feedback = (del_out * delayFDBK) + in[i];
+        feedback = (del_out * delayFDBK) + in[LEFT];
 
         // Write to the delay
         del.Write(feedback);
-        flutter.Process(sig_outL);
+        flutter.Process(del_out + in[LEFT]);
 
-        //sig_outL = flutter.GetLeft();
-        //sig_outR = flutter.GetRight();
+        wow_outL = flutter.GetLeft();
+        wow_outR = flutter.GetRight();
+
+        //Form signal output with delay and wow
+        wow_del_outL = (wow * wow_outL) + ((1-wow) * del_out);
+        wow_del_outR = (wow * wow_outR) + ((1-wow) * del_out);
+
+        sig_outL = (wow_del_outL * wetBlend) + ((1 - wow) * in[LEFT]);
+        sig_outR = (wow_del_outR * wetBlend) + ((1 - wow) * in[RIGHT]);
 
         // Reverb writes to output
-        verb.Process(sig_outL, sig_outL, &verb_outL, &verb_outR);
+        verb.Process(sig_outL, sig_outR, &verb_outL, &verb_outR);
 
         // Output
         out[LEFT]  = (1-verbBlend)*sig_outL + verbBlend*verb_outL;
@@ -130,24 +146,32 @@ int main(void)
         hw.SetLed(led_state);
 
         //Debounce the button
-        buttons[Switch0].Debounce();
+        buttons[programSw].Debounce();
+        buttons[tempoSw].Debounce();
+        buttons[divisionSw].Debounce();
 
         // Read inputs and update delay and verb variables
         updateDelay();
         updateReverb();
+        updateFlutter();
 
-        if(buttons[Switch0].FallingEdge()){
+        if(buttons[programSw].FallingEdge()){
             presetManager.nextPreset();
         }
 
+        // Cycle through division count
+        if(buttons[divisionSw].FallingEdge()){
+            divisions = ((divisions) % 4) + 1;
+        }
+
         //Print to display
-        dLines[0] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms";
-        dLines[1] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
-        dLines[2] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(Knob2)*100.00f));
-        dLines[3] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(Knob3)*100.00f));
-        //(buttons[Switch0].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
+        dLines[0] = "Preset: " + presetManager.getPresetName();
+        dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
+        dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
+        dLines[3] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(spaceKnob)*100.00f));
+        dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
+        //(buttons[programSw].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
         //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
-        dLines[4] = "Preset: " + presetManager.getPresetName();
         dLines[5] = "";
         display.print(dLines, 6);
 
@@ -167,13 +191,16 @@ int OuroborosInit(){
     verb.SetLpFreq(18000.0f);
 
     // Initialize knobs
-    adcConfig[Knob0].InitSingle(hw.GetPin(15));
-    adcConfig[Knob1].InitSingle(hw.GetPin(16));
-    adcConfig[Knob2].InitSingle(hw.GetPin(17));
-    adcConfig[Knob3].InitSingle(hw.GetPin(18));
+    adcConfig[rateKnob].InitSingle(hw.GetPin(15));
+    adcConfig[fdbkKnob].InitSingle(hw.GetPin(16));
+    adcConfig[spaceKnob].InitSingle(hw.GetPin(17));
+    adcConfig[wowKnob].InitSingle(hw.GetPin(18));
+    adcConfig[blendKnob].InitSingle(hw.GetPin(19));
 
     // Initialize Buttons
-    buttons[Switch0].Init(hw.GetPin(25), 1000);
+    buttons[programSw].Init(hw.GetPin(26), 1000);
+    buttons[divisionSw].Init(hw.GetPin(27), 1000);
+    buttons[tempoSw].Init(hw.GetPin(25), 1000);
 
     //Initialize the adc with the config we just made
     hw.adc.Init(adcConfig, NUM_ADC_CHANNELS);
@@ -213,8 +240,9 @@ void updateDelay(){
 
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
-    float delayKnob = std::trunc(hw.adc.GetFloat(Knob0)*100.0f)/100.0f;
-    
+    float delayKnob = std::trunc(hw.adc.GetFloat(rateKnob)*100.0f)/100.0f;
+    wetBlend = std::trunc(hw.adc.GetFloat(blendKnob)*100.0f)/100.0f;
+
     for(int i = 3; i >= 0; i--){
         delaybuf[i+1] = delaybuf[i];
     }
@@ -223,12 +251,12 @@ void updateDelay(){
 
     // Only update delay if knob has been turned sufficiently
     if( delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
-        delaytime = min + (delayKnob * range);
+        delaytime = (min + (delayKnob * range));
         
         // Set delay to value between 1 and 103ms, set metro to freq
-        del.SetDelay(sample_rate * (delaytime));
+        del.SetDelay(sample_rate * (delaytime / (float)divisions));
         
-        // Set tick 1/delay time * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
+        // Set tick (1/delay time) * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
         tick.SetFreq(8.0f/delaytime); 
     }
 }
@@ -240,16 +268,25 @@ void updateReverb(){
 
     // Read and scale appropriate knobs
     // Truncates the pot reading to 2 decimal points
-    float rFDBK = std::trunc(hw.adc.GetFloat(Knob1)*100.0f)/100.0f;
+    float rFDBK = std::trunc(hw.adc.GetFloat(fdbkKnob)*100.0f)/100.0f;
     rFDBK = min + (rFDBK * range); 
     delayFDBK = rFDBK;
 
-    float rBlend = std::trunc(hw.adc.GetFloat(Knob2)*100.0f)/100.0f;
+    float rBlend = std::trunc(hw.adc.GetFloat(spaceKnob)*100.0f)/100.0f;
 
     verb.SetFeedback(rFDBK);
     verbBlend = rBlend;
 }
 
 void updateFlutter(){
-    return;
+
+    // Read and scale appropriate knobs
+    // Truncates the pot reading to 2 decimal points
+    float flutterAm = std::trunc(hw.adc.GetFloat(wowKnob)*100.0f)/100.0f;
+    wow = flutterAm;
+
+    flutter.SetLfoFreq(2.0f * flutterAm);
+    flutter.SetLfoDepth(0.6f + flutterAm * 0.4f);
+    flutter.SetDelay(0.5f + flutterAm * 0.5f);
+    flutter.SetFeedback(0.3f + flutterAm * 0.4f);
 }
