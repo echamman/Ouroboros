@@ -2,6 +2,7 @@
 #include "daisy_seed.h"
 #include "src/OLED/OLED.h"
 #include "src/Presets/presets.h"
+#include "src/tempoManager/tempoManager.h"
 
 // Interleaved audio definitions
 #define LEFT (i)
@@ -75,6 +76,9 @@ static Metro tick;
 
 // OLED Screen 
 static Oled display;
+
+// Tempo manager
+static tempoManager tempo;
 
 // Preset Manager
 static presets presetManager;
@@ -164,12 +168,18 @@ int main(void)
             divisions = ((divisions) % 4) + 1;
         }
 
+        // Tap tempo
+        if(buttons[tempoSw].FallingEdge()){
+            tempo.pressEvent();
+        }
+
         //Print to display
         dLines[0] = "Preset: " + presetManager.getPresetName();
         dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
         dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
         dLines[3] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(spaceKnob)*100.00f));
-        dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
+        dLines[4] = std::to_string(tempo.getNow());
+        //dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
         //(buttons[programSw].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
         //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
         dLines[5] = "";
@@ -189,6 +199,7 @@ int OuroborosInit(){
     del.Init();
     verb.Init(sample_rate);
     verb.SetLpFreq(18000.0f);
+    tempo.Init(sample_rate, &hw, rateKnob, &presetManager);
 
     // Initialize knobs
     adcConfig[rateKnob].InitSingle(hw.GetPin(15));
@@ -215,7 +226,7 @@ int OuroborosInit(){
     flutter.SetDelay(.75f, .9f);
 
     // Initialize Metro at 100Hz
-    tick.Init(10.0f, sample_rate);
+    tick.Init(4.0f, sample_rate);
 
     // initialize the load meter so that it knows what time is available for the processing:
     loadMeter.Init(hw.AudioSampleRate(), hw.AudioBlockSize());
@@ -235,30 +246,17 @@ int OuroborosInit(){
 
 void updateDelay(){
 
-    float min = presetManager.getDelayMin();
-    float range = presetManager.getDelayRange();
-
-    // Read and scale appropriate knobs
-    // Read knob as float (0-0.99), truncate to two decimal points
-    float delayKnob = std::trunc(hw.adc.GetFloat(rateKnob)*100.0f)/100.0f;
+    // Reads tempo from the tempo manager
+    // TODO standardize tempo as either float in seconds or int64_t in ms
+    delaytime = ((float)tempo.getTempo()) / 1000.0f;
+    
     wetBlend = std::trunc(hw.adc.GetFloat(blendKnob)*100.0f)/100.0f;
 
-    for(int i = 3; i >= 0; i--){
-        delaybuf[i+1] = delaybuf[i];
-    }
-
-    delaybuf[0] = delayKnob;
-
-    // Only update delay if knob has been turned sufficiently
-    if( delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
-        delaytime = (min + (delayKnob * range));
-        
-        // Set delay to value between 1 and 103ms, set metro to freq
-        del.SetDelay(sample_rate * (delaytime / (float)divisions));
-        
-        // Set tick (1/delay time) * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
-        tick.SetFreq(8.0f/delaytime); 
-    }
+    // Set delay to value between 1 and 103ms, set metro to freq
+    del.SetDelay(sample_rate * (delaytime / (float)divisions));
+    
+    // Set tick (1/delay time) * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
+    tick.SetFreq(8.0f/delaytime); 
 }
 
 void updateReverb(){

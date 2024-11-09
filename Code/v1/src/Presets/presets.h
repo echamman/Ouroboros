@@ -1,6 +1,8 @@
 /*
     Defines presets available for delay and reverb
 */
+#ifndef PRESETS_H
+#define PRESETS_H
 
 #include <stdio.h>
 #include <string>
@@ -103,3 +105,5 @@ class presets{
             return presetArr[currentPreset].flutter;
         }
 };
+
+#endif
