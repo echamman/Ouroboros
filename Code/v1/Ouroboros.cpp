@@ -60,7 +60,7 @@ float verbBlend;
 // Blends delay and wow
 float wetBlend;
 // Declare a variable to store the state we want to set for the LED.
-bool led_state = false;
+volatile bool led_state = true;
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
@@ -88,11 +88,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           size_t                                size)
 {
 
-    loadMeter.OnBlockStart();
-
-    if(tick.Process()){
-        led_state = !led_state;
-    }
+    //loadMeter.OnBlockStart();
 
     float feedback, del_out, sig_outL, sig_outR;
     float verb_outL, verb_outR, wow_outL, wow_outR;
@@ -100,6 +96,10 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
     for(size_t i = 0; i < size; i += 2)
     {
+        if(tick.Process()){
+            led_state = !led_state;
+        }
+
         // Read from delay line
         del_out = del.Read();
         // Calculate output and feedback
@@ -127,7 +127,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         out[RIGHT] = (1-verbBlend)*sig_outL + verbBlend*verb_outR;
     }
 
-    loadMeter.OnBlockEnd();
+    //loadMeter.OnBlockEnd();
 }
 
 int main(void)
@@ -178,7 +178,7 @@ int main(void)
         dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
         dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
         dLines[3] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(spaceKnob)*100.00f));
-        dLines[4] = std::to_string(tempo.getNow());
+        dLines[4] = std::to_string((int)tick.GetFreq());
         //dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
         //(buttons[programSw].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
         //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
@@ -255,8 +255,11 @@ void updateDelay(){
     // Set delay to value between 1 and 103ms, set metro to freq
     del.SetDelay(sample_rate * (delaytime / (float)divisions));
     
-    // Set tick (1/delay time) * 2 * 4 (2 is so LED has rising edge every tick, unsure why 4 is needed)
-    tick.SetFreq(8.0f/delaytime); 
+    // Set tick (1/delay time) * 2 * 4 (2 is so LED has rising edge every tick)
+    if(abs(tick.GetFreq() - (2.0f/delaytime)) > 1.0f){
+        tick.SetFreq(2.0f/delaytime); 
+        tick.Reset();
+    }
 }
 
 void updateReverb(){
