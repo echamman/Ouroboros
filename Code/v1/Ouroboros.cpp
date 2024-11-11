@@ -100,6 +100,8 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
             led_state = !led_state;
         }
 
+        tempo.Process();
+
         // Read from delay line
         del_out = del.Read();
         // Calculate output and feedback
@@ -178,8 +180,7 @@ int main(void)
         dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
         dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
         dLines[3] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(spaceKnob)*100.00f));
-        dLines[4] = std::to_string((int)tick.GetFreq());
-        //dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
+        dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
         //(buttons[programSw].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
         //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
         dLines[5] = "";

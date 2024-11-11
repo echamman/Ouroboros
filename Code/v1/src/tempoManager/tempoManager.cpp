@@ -1,45 +1,57 @@
 #include "tempoManager.h"
 
-void tempoManager::Init(float sample_rate, DaisySeed *seed, int knob, presets *presetManager){
+void tempoManager::Init(float samprate, DaisySeed *seed, int knob, presets *presetManager){
 
+    sample_rate = samprate;
     rateKnob = knob;
     preset = *presetManager;
     hw = *seed;
 
-    time_point<steady_clock> now = steady_clock::now();
-
     //Fill buffer
     for(int i = 0; i < 3; i++){
-        press[i] = now;
-        
+        press[i] = 0;
     }
-    p0 = now;
+}
+
+void tempoManager::Process(){
+    samples = (samples + 1) % ((int)(sample_rate) * MAX_DELAY_S);
+    
+    if(samples == 0){
+        overflow = true;
+    }
+
+}
+
+void tempoManager::resetCount(){
+    samples = 0;
+    overflow = false;
+    bufCount = 1;
 }
 
 // Records a button press
 void tempoManager::pressEvent(){
 
-    time_point<steady_clock> now = steady_clock::now();
-
+    // Move sample count through buffer
     for(int i = 2; i > 0; i--){
         press[i] = press[i-1];
     }
-    p1 = p0;
-    p0 = now;
+    press[0] = samples;
 
-    press[0] = now;
+    // Check if overflowed between samples
+    if(overflow){
+        resetCount();
+    }else if (bufCount < 3){
+        bufCount++;
+    }else{
+        tap = true;
+        tapTempo = (press[0] - press[1]);
+        // Translate samples into time in ms
+        tapTempo = (uint64_t)(((float)tapTempo / sample_rate) * 1000.0f);
+    }
 }
-
-int64_t tempoManager::getNow(){
-
-    auto dur = duration_cast<milliseconds>(p0 - p1);
-
-    return dur.count();
-}
-
 
 //Returns a tempo if 3 pushes were registered, else return knob time. Time in ms
-int64_t tempoManager::getTempo(){
+uint64_t tempoManager::getTempo(){
 
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
@@ -49,17 +61,7 @@ int64_t tempoManager::getTempo(){
     float range = preset.getDelayRange();
     float delaytime;
 
-    milliseconds dur12 = duration_cast<milliseconds>(press[2] - press[1]);
-    milliseconds dur01 = duration_cast<milliseconds>(press[1] - press[0]);
-
-    // Return last duration if the two durations are within 200ms of each other and not 10ms of eachother
-    if((dur12.count() - dur01.count()) < 200){
-        if((dur12.count() - dur01.count()) > 10){
-            tap = true;
-            tapTempo = dur01.count();
-        }
-    }
-
+    // Handle knob debouncing
     for(int i = 3; i >= 0; i--){
         delaybuf[i+1] = delaybuf[i];
     }
@@ -76,6 +78,8 @@ int64_t tempoManager::getTempo(){
         }
     }
 
+    // Return tap tempo if tapping has occured
+    // Return knob tempo if knob has been turned
     if(tap){
         return tapTempo;
     }else{

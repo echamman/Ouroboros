@@ -11,6 +11,8 @@
 #include "../Presets/presets.h"
 #include <chrono>
 
+#define MAX_DELAY_S 8       // 8 second recording buffer for sampling
+
 using namespace daisysp;
 using namespace daisy;
 using namespace std::chrono;
@@ -18,29 +20,37 @@ using namespace std::chrono;
 
 class tempoManager{
     private:
-        int64_t tapTempo = 300;   // Time in milliseconds
-        int64_t knobTempo = 0;  // Time in milliseconds
-        int rateKnob;
-        float delaybuf[5] = { };
-        bool tap = false;
+        float sample_rate;
+        uint64_t tapTempo = 300;    // Time in milliseconds
+        uint64_t knobTempo = 0;     // Time in milliseconds
+        uint64_t samples = 0;       // ticks passed 
 
+        float delaybuf[5] = { };    // Knob debouncing buffer
+        uint64_t press[3];          // Tap tempo buffer
+        int bufCount = 0;           // Valid spots in tap tempo buffer
+
+        bool overflow = true;       // overflowed maximum tap tempo delay time
+        bool tap = false;           // Flag for whether tap tempo or knob tempo will be used
+
+        int rateKnob;               // ADC Value to read knob
         DaisySeed hw;
         presets preset;
-        time_point<steady_clock> press[3];
-        time_point<steady_clock> p1;
-        time_point<steady_clock> p0;
+
+        // Resets tempo counter 
+        void resetCount();
 
     public:
         // Initializes tap tempo module
         void Init(float sample_rate, DaisySeed *seed, int knob, presets *presetManager);
 
+        // Processed at sample rate frequency
+        void Process();
+
         // Records a button press
         void pressEvent();
 
         //Returns a tempo if 3 pushes were registered, else -1
-        int64_t getTempo();
-
-        int64_t getNow();
+        uint64_t getTempo();
 
 };
 
