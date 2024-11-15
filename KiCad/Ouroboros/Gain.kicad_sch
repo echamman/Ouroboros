@@ -1385,27 +1385,29 @@
 		)
 		(uuid "7e65375d-cb6d-4347-8ac5-734e228c2c0e")
 	)
-	(label "IN_LEVEL"
-		(at 107.95 78.74 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "16384583-862d-4ab9-9fb1-f32e9a03eda9")
-	)
-	(label "IN_GAIN"
+	(hierarchical_label "IN_GAIN"
+		(shape input)
 		(at 186.69 81.28 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify left)
 		)
-		(uuid "7514e180-6f06-4cb3-b85a-753ea222d264")
+		(uuid "59d6c358-3019-4628-9868-e157d14637f8")
+	)
+	(hierarchical_label "IN_LEVEL"
+		(shape input)
+		(at 107.95 78.74 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b0eab2e5-9756-41b1-9d9b-d0c90500bc94")
 	)
 	(symbol
 		(lib_id "power:+5V")

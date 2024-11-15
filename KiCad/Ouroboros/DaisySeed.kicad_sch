@@ -2856,6 +2856,66 @@
 		)
 		(uuid "eda1823a-7d08-4974-a5d3-c65e46029918")
 	)
+	(hierarchical_label "OUT_L"
+		(shape input)
+		(at 96.52 77.47 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ad09c4b6-f206-478f-bfb6-97cdd355f171")
+	)
+	(hierarchical_label "I2C_SDA"
+		(shape input)
+		(at 191.77 90.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "b52b881e-c8bc-4841-bcc9-f773901d8ac6")
+	)
+	(hierarchical_label "OUT_R"
+		(shape input)
+		(at 96.52 80.01 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c655670a-c6fa-4610-babe-7168767c6b30")
+	)
+	(hierarchical_label "I2C_SCL"
+		(shape input)
+		(at 191.77 87.63 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "dc84491e-985c-4397-a987-f5718dd9a1ad")
+	)
+	(hierarchical_label "IN_GAIN"
+		(shape input)
+		(at 96.52 72.39 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ebd8f03e-7648-4647-9247-f36ec2b7d5a4")
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 123.19 48.26 0)
