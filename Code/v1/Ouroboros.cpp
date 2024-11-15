@@ -287,7 +287,7 @@ void updateFlutter(){
     float flutterAm = std::trunc(hw.adc.GetFloat(wowKnob)*100.0f)/100.0f;
     wow = flutterAm;
 
-    flutter.SetLfoFreq(2.0f * flutterAm);
+    flutter.SetLfoFreq(0.3f + flutterAm * 0.7f);
     flutter.SetLfoDepth(0.6f + flutterAm * 0.4f);
     flutter.SetDelay(0.5f + flutterAm * 0.5f);
     flutter.SetFeedback(0.3f + flutterAm * 0.4f);
