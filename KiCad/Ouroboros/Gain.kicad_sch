@@ -1154,6 +1154,16 @@
 		)
 		(uuid "17fe4ecd-f8fc-4188-98aa-cd4d3f68fad4")
 	)
+	(polyline
+		(pts
+			(xy 96.52 59.69) (xy 205.74 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1f02888a-3ad8-4cbe-8d9a-ab28fa2dc780")
+	)
 	(wire
 		(pts
 			(xy 132.08 102.87) (xy 138.43 102.87)
@@ -1223,6 +1233,16 @@
 			(type default)
 		)
 		(uuid "44f69c04-08bf-4bc4-9ca7-347ae67d26db")
+	)
+	(polyline
+		(pts
+			(xy 205.74 124.46) (xy 205.74 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "486c2ea2-6c73-4403-9599-a1b891d6f8f8")
 	)
 	(wire
 		(pts
@@ -1314,6 +1334,16 @@
 		)
 		(uuid "cb18147d-4537-44aa-b629-1d32f03c9018")
 	)
+	(polyline
+		(pts
+			(xy 96.52 59.69) (xy 96.52 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3632614-3f1f-4ef2-b01f-50f1ba9571a1")
+	)
 	(wire
 		(pts
 			(xy 142.24 99.06) (xy 142.24 92.71)
@@ -1323,6 +1353,37 @@
 			(type default)
 		)
 		(uuid "ec35f223-bc88-4f99-b5d9-f3a8d81cb59b")
+	)
+	(polyline
+		(pts
+			(xy 96.52 124.46) (xy 205.74 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f352d838-38d5-4244-8ef8-4e33db2e46ba")
+	)
+	(text "Gain Stage"
+		(exclude_from_sim no)
+		(at 152.4 65.024 0)
+		(effects
+			(font
+				(size 5 5)
+			)
+		)
+		(uuid "496d6572-1ee9-4167-980c-9c6a86fa3b18")
+	)
+	(text "[3] Gain"
+		(exclude_from_sim no)
+		(at 151.892 19.558 0)
+		(effects
+			(font
+				(size 5 5)
+				(color 132 0 0 1)
+			)
+		)
+		(uuid "7e65375d-cb6d-4347-8ac5-734e228c2c0e")
 	)
 	(label "IN_LEVEL"
 		(at 107.95 78.74 0)
@@ -1334,6 +1395,17 @@
 			(justify left bottom)
 		)
 		(uuid "16384583-862d-4ab9-9fb1-f32e9a03eda9")
+	)
+	(label "IN_GAIN"
+		(at 186.69 81.28 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "7514e180-6f06-4cb3-b85a-753ea222d264")
 	)
 	(symbol
 		(lib_id "power:+5V")

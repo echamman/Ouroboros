@@ -44,8 +44,8 @@
 		)
 	)
 	(sheet
-		(at 86.36 43.18)
-		(size 12.7 3.81)
+		(at 121.92 34.29)
+		(size 27.94 16.51)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
@@ -55,8 +55,8 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "62d72753-1043-42a5-8194-984b7e294543")
-		(property "Sheetname" "POWER"
-			(at 86.36 42.4684 0)
+		(property "Sheetname" "Power"
+			(at 121.92 33.5784 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -65,7 +65,7 @@
 			)
 		)
 		(property "Sheetfile" "Power.kicad_sch"
-			(at 86.36 47.5746 0)
+			(at 121.92 51.3846 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -82,7 +82,7 @@
 		)
 	)
 	(sheet
-		(at 30.48 45.72)
+		(at 29.21 74.93)
 		(size 45.72 36.83)
 		(fields_autoplaced yes)
 		(stroke
@@ -94,7 +94,7 @@
 		)
 		(uuid "66c5e6da-8274-4bfc-b294-7d19b5ad631c")
 		(property "Sheetname" "Input"
-			(at 30.48 45.0084 0)
+			(at 29.21 74.2184 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -103,7 +103,7 @@
 			)
 		)
 		(property "Sheetfile" "input.kicad_sch"
-			(at 30.48 83.1346 0)
+			(at 29.21 112.3446 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -120,7 +120,7 @@
 		)
 	)
 	(sheet
-		(at 161.29 53.34)
+		(at 157.48 73.66)
 		(size 64.77 49.53)
 		(fields_autoplaced yes)
 		(stroke
@@ -132,7 +132,7 @@
 		)
 		(uuid "ba1cd65b-2a74-4443-bdbe-a3dc34abcd57")
 		(property "Sheetname" "DaisySeed"
-			(at 161.29 52.6284 0)
+			(at 157.48 72.9484 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -141,7 +141,7 @@
 			)
 		)
 		(property "Sheetfile" "DaisySeed.kicad_sch"
-			(at 161.29 103.4546 0)
+			(at 157.48 123.7746 0)
 			(effects
 				(font
 					(size 1.27 1.27)
