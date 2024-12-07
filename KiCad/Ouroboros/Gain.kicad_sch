@@ -1806,7 +1806,7 @@
 				)
 			)
 		)
-		(property "Value" "100p"
+		(property "Value" "1u"
 			(at 182.88 76.2 90)
 			(effects
 				(font
@@ -1814,7 +1814,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm"
+		(property "Footprint" "Capacitor_THT:C_Rect_L7.0mm_W6.0mm_P5.00mm"
 			(at 186.69 80.3148 0)
 			(effects
 				(font

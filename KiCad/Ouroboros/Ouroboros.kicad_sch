@@ -7,23 +7,13 @@
 	(lib_symbols)
 	(wire
 		(pts
-			(xy 19.05 91.44) (xy 29.21 91.44)
+			(xy 82.55 156.21) (xy 92.71 156.21)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "22e9f91d-bdd6-4d5d-b4b9-89764761135a")
-	)
-	(wire
-		(pts
-			(xy 19.05 88.9) (xy 29.21 88.9)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "37395e5d-b520-44ec-a845-146d449215ad")
+		(uuid "0fbe4e14-72c4-441d-9eba-5a662c6aee85")
 	)
 	(wire
 		(pts
@@ -37,6 +27,16 @@
 	)
 	(wire
 		(pts
+			(xy 231.14 78.74) (xy 247.65 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "54a4ecc2-3fee-4482-acca-6e6a46d9b8b0")
+	)
+	(wire
+		(pts
 			(xy 143.51 88.9) (xy 157.48 88.9)
 		)
 		(stroke
@@ -44,6 +44,46 @@
 			(type default)
 		)
 		(uuid "6c2ea7ce-0c92-44ce-a400-c013acf32fef")
+	)
+	(wire
+		(pts
+			(xy 231.14 83.82) (xy 231.14 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9419ca5d-1d1f-4fc9-aaf4-32d7ebbb0c8b")
+	)
+	(wire
+		(pts
+			(xy 233.68 82.55) (xy 247.65 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a92b83ed-312b-4bf7-9da5-30ac5944a06f")
+	)
+	(wire
+		(pts
+			(xy 82.55 160.02) (xy 92.71 160.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab1c2829-24b0-4e5e-88cb-eccdf6edbfe7")
+	)
+	(wire
+		(pts
+			(xy 222.25 83.82) (xy 231.14 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab3c1857-e537-4d60-b149-d944811c9b1d")
 	)
 	(wire
 		(pts
@@ -65,6 +105,26 @@
 		)
 		(uuid "d8477619-79f0-4a78-bb23-66b75e0f20b0")
 	)
+	(wire
+		(pts
+			(xy 222.25 86.36) (xy 233.68 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e11a27fb-7724-4283-ae88-a06dc4434a7f")
+	)
+	(wire
+		(pts
+			(xy 233.68 86.36) (xy 233.68 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4c269a4-d10a-4673-80b2-a8ed0e5d27c6")
+	)
 	(text "[0] Root"
 		(exclude_from_sim no)
 		(at 133.604 19.304 0)
@@ -76,19 +136,8 @@
 		)
 		(uuid "7f6879bd-707c-4521-a439-7544bed51b02")
 	)
-	(label "OUT_L"
-		(at 19.05 88.9 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "3d5f8cc4-0bc7-459d-ac4b-2de3f7f2a737")
-	)
 	(label "OUT_R"
-		(at 19.05 91.44 0)
+		(at 82.55 160.02 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -96,7 +145,18 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "427b7edb-c48e-4d2a-a9be-df390d70c53b")
+		(uuid "20a96644-51c1-4d93-8572-62f981eeafe2")
+	)
+	(label "OUT_L"
+		(at 82.55 156.21 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2c95b79e-f35f-4811-b586-c0d04cfc50a3")
 	)
 	(label "OUT_L"
 		(at 233.68 97.79 180)
@@ -119,6 +179,122 @@
 			(justify right bottom)
 		)
 		(uuid "b2767b2f-c267-4719-a47c-25b509c5aaaf")
+	)
+	(sheet
+		(at 247.65 74.93)
+		(size 29.21 19.05)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "0d17f6d4-64ac-41e7-bcb5-1a037b964049")
+		(property "Sheetname" "OLED"
+			(at 247.65 74.2184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "OLED.kicad_sch"
+			(at 247.65 94.5646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "I2C_SCL" input
+			(at 247.65 78.74 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "629d4871-6c0c-4c6c-9fca-698583c6d008")
+		)
+		(pin "I2C_SDA" input
+			(at 247.65 82.55 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "3b065c4b-7911-43df-8deb-47e8cabae90c")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 92.71 146.05)
+		(size 60.96 34.29)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "0ea42127-fe6e-460f-9142-8a11a130b271")
+		(property "Sheetname" "Output"
+			(at 92.71 145.3384 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "output.kicad_sch"
+			(at 92.71 180.9246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "OUT_L" input
+			(at 92.71 156.21 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "00234748-dddb-4e30-8367-96ef53e8001b")
+		)
+		(pin "OUT_R" input
+			(at 92.71 160.02 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "58c07e1b-ea1f-4f07-a574-1fac5c00fcd1")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258"
+					(page "7")
+				)
+			)
+		)
 	)
 	(sheet
 		(at 92.71 73.66)
@@ -228,7 +404,7 @@
 			(color 0 0 0 0.0000)
 		)
 		(uuid "66c5e6da-8274-4bfc-b294-7d19b5ad631c")
-		(property "Sheetname" "InputOutput"
+		(property "Sheetname" "Input"
 			(at 29.21 74.2184 0)
 			(effects
 				(font
@@ -255,26 +431,6 @@
 				(justify right)
 			)
 			(uuid "4afa6f38-ddda-4111-85f2-5ac2f424715d")
-		)
-		(pin "OUT_L" input
-			(at 29.21 88.9 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "66fec79b-107c-4709-bbb0-7c98d8f68bbe")
-		)
-		(pin "OUT_R" input
-			(at 29.21 91.44 180)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-			(uuid "6467aaa6-3084-4f11-a48d-c02375399611")
 		)
 		(instances
 			(project "Ouroboros"

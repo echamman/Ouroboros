@@ -394,10 +394,8 @@
 				)
 			)
 		)
-		(symbol "Connector:Jack-DC"
-			(pin_names
-				(offset 1.016)
-			)
+		(symbol "Connector:Barrel_Jack_MountingPin"
+			(pin_names hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -409,12 +407,13 @@
 					)
 				)
 			)
-			(property "Value" "Jack-DC"
-				(at 0 -5.08 0)
+			(property "Value" "Barrel_Jack_MountingPin"
+				(at 1.27 -6.35 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 				)
 			)
 			(property "Footprint" ""
@@ -435,7 +434,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "DC Barrel Jack"
+			(property "Description" "DC Barrel Jack with a mounting pin"
 				(at 0 0 0)
 				(effects
 					(font
@@ -462,7 +461,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "Jack-DC_0_1"
+			(symbol "Barrel_Jack_MountingPin_0_1"
 				(rectangle
 					(start -5.08 3.81)
 					(end 5.08 -3.81)
@@ -534,7 +533,27 @@
 					)
 				)
 			)
-			(symbol "Jack-DC_1_1"
+			(symbol "Barrel_Jack_MountingPin_1_1"
+				(polyline
+					(pts
+						(xy -1.016 -4.572) (xy 1.016 -4.572)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(text "Mounting"
+					(at 0 -4.191 0)
+					(effects
+						(font
+							(size 0.381 0.381)
+						)
+					)
+				)
 				(pin passive line
 					(at 7.62 2.54 180)
 					(length 2.54)
@@ -564,6 +583,24 @@
 						)
 					)
 					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -7.62 90)
+					(length 3.048)
+					(name "MountPin"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "MP"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1859,6 +1896,16 @@
 		)
 		(uuid "2e178240-069f-417e-a200-2651b402a215")
 	)
+	(polyline
+		(pts
+			(xy 223.52 102.87) (xy 273.05 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2f41946c-92c1-49a1-a17b-0b8e80914a05")
+	)
 	(wire
 		(pts
 			(xy 54.61 93.98) (xy 54.61 99.06)
@@ -1878,6 +1925,16 @@
 			(type default)
 		)
 		(uuid "3ba8a6a8-89ee-4a8c-8af6-efa8fbd78d57")
+	)
+	(polyline
+		(pts
+			(xy 223.52 49.53) (xy 273.05 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "43c5435b-9ed7-4b16-a1f6-d97082675505")
 	)
 	(wire
 		(pts
@@ -1928,6 +1985,16 @@
 			(type default)
 		)
 		(uuid "548d6fdb-afe8-4d79-b8bc-2eea99db9462")
+	)
+	(polyline
+		(pts
+			(xy 223.52 49.53) (xy 223.52 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "56691013-3aa7-4870-853a-b631139ca9d9")
 	)
 	(wire
 		(pts
@@ -2139,6 +2206,16 @@
 		)
 		(uuid "ca537242-44a8-4eed-a7b3-0ce568da464a")
 	)
+	(polyline
+		(pts
+			(xy 273.05 102.87) (xy 273.05 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ccb3bacb-7bec-46ba-8091-f6a741fff1e9")
+	)
 	(wire
 		(pts
 			(xy 116.84 59.69) (xy 116.84 63.5)
@@ -2188,6 +2265,16 @@
 			(type default)
 		)
 		(uuid "d73a2c18-f7cb-4813-a07d-0434605507c8")
+	)
+	(wire
+		(pts
+			(xy 165.1 58.42) (xy 168.91 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dca228e6-f8ee-45f0-a64d-325571c15fb4")
 	)
 	(polyline
 		(pts
@@ -2269,6 +2356,16 @@
 			)
 		)
 		(uuid "5e5cbc10-918d-4ae4-b490-2536a4ab2398")
+	)
+	(text "2.5V Rail\n"
+		(exclude_from_sim no)
+		(at 251.968 54.356 0)
+		(effects
+			(font
+				(size 3 3)
+			)
+		)
+		(uuid "a6096416-15cd-45f6-91f1-a2c40c0d4444")
 	)
 	(symbol
 		(lib_id "Device:C")
@@ -2887,7 +2984,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector:Jack-DC")
+		(lib_id "Connector:Barrel_Jack_MountingPin")
 		(at 165.1 66.04 180)
 		(unit 1)
 		(exclude_from_sim no)
@@ -2897,7 +2994,7 @@
 		(fields_autoplaced yes)
 		(uuid "5b78760d-1766-48cc-805d-7421ad734ea0")
 		(property "Reference" "J2"
-			(at 171.45 64.7699 0)
+			(at 171.45 64.4143 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2906,7 +3003,7 @@
 			)
 		)
 		(property "Value" "Jack-DC"
-			(at 171.45 67.3099 0)
+			(at 171.45 66.9543 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2932,7 +3029,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "DC Barrel Jack"
+		(property "Description" "DC Barrel Jack with a mounting pin"
 			(at 165.1 66.04 0)
 			(effects
 				(font
@@ -2946,6 +3043,9 @@
 		)
 		(pin "1"
 			(uuid "d66b90b1-95df-4975-a8df-c78e3f77c0dc")
+		)
+		(pin "MP"
+			(uuid "0294f480-647c-4727-9b37-561b5eea092b")
 		)
 		(instances
 			(project ""
@@ -3518,6 +3618,73 @@
 				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/62d72753-1043-42a5-8194-984b7e294543"
 					(reference "U1")
 					(unit 5)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 168.91 58.42 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d885b7ce-e31e-49ba-bfa3-b1af5d350094")
+		(property "Reference" "#PWR050"
+			(at 175.26 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 172.72 58.4199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 168.91 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 168.91 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 168.91 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f342504f-174e-47a6-a65b-7c03fa136e29")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/62d72753-1043-42a5-8194-984b7e294543"
+					(reference "#PWR050")
+					(unit 1)
 				)
 			)
 		)
