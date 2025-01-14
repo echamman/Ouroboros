@@ -1329,45 +1329,51 @@
 				)
 			)
 		)
-		(symbol "NMJ4HFD2_1"
+		(symbol "Transistor_FET:BF244A"
+			(pin_names hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "J"
-				(at 0 11.43 0)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 				)
 			)
-			(property "Value" "NMJ4HFD2"
-				(at 0 8.89 0)
+			(property "Value" "BF244A"
+				(at 5.08 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 				)
 			)
-			(property "Footprint" "Connector_Audio:Jack_6.35mm_Neutrik_NMJ4HFD2_Horizontal"
-				(at 0 5.08 0)
+			(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+				(at 5.08 -1.905 0)
 				(effects
 					(font
 						(size 1.27 1.27)
+						(italic yes)
 					)
+					(justify left)
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "https://www.neutrik.com/en/product/nmj4hfd2"
-				(at 0 5.08 0)
+			(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Fairchild%20PDFs/BF244x.pdf"
+				(at 5.08 -3.81 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left)
 					(hide yes)
 				)
 			)
-			(property "Description" "M Series, 6.35mm (1/4in) mono jack, switched, with ful threaded nose and straight PCB pins"
+			(property "Description" "50mA Id, 30V Vgs, N-Channel FET Transistor, TO-92"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1376,7 +1382,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "audio jack receptacle mono headphones phone TS connector neutrik"
+			(property "ki_keywords" "N-Channel FET Transistor Low Voltage"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1385,7 +1391,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "Jack*"
+			(property "ki_fp_filters" "TO?92*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1394,114 +1400,109 @@
 					(hide yes)
 				)
 			)
-			(symbol "NMJ4HFD2_1_0_1"
-				(rectangle
-					(start -2.54 0)
-					(end -3.81 -2.54)
+			(symbol "BF244A_0_1"
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
 					(stroke
 						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 -1.397) (xy 0.254 -1.397)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.397) (xy 0.254 1.397)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy -1.016 0.381) (xy -1.016 -0.381) (xy 0 0)
+					)
+					(stroke
+						(width 0)
 						(type default)
 					)
 					(fill
 						(type outline)
 					)
 				)
-				(rectangle
-					(start 2.54 6.35)
-					(end -2.54 -3.81)
+				(circle
+					(center 1.27 0)
+					(radius 2.8194)
 					(stroke
 						(width 0.254)
 						(type default)
 					)
 					(fill
-						(type background)
+						(type none)
 					)
 				)
 			)
-			(symbol "NMJ4HFD2_1_1_1"
-				(polyline
-					(pts
-						(xy 0.635 4.826) (xy 0.889 4.318)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.778 -0.254) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 0) (xy 0.635 -0.635) (xy 1.27 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 -2.54) (xy 1.778 -2.54) (xy 1.778 -0.254) (xy 1.524 -0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 2.54) (xy 0.635 2.54) (xy 0.635 4.826) (xy 0.381 4.318)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 5.08) (xy -0.635 5.08) (xy -0.635 0) (xy -1.27 -0.635) (xy -1.905 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
+			(symbol "BF244A_1_1"
 				(pin passive line
-					(at 5.08 5.08 180)
+					(at 2.54 5.08 270)
 					(length 2.54)
-					(name "~"
+					(name "D"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "S"
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1510,52 +1511,16 @@
 					)
 				)
 				(pin passive line
-					(at 5.08 2.54 180)
+					(at 2.54 -5.08 90)
 					(length 2.54)
-					(name "~"
+					(name "S"
 						(effects
 							(font
 								(size 1.27 1.27)
 							)
 						)
 					)
-					(number "SN"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "T"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 -2.54 180)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "TN"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -1665,6 +1630,126 @@
 				)
 			)
 			(symbol "+2V5_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "power:+5V"
+			(power)
+			(pin_numbers hide)
+			(pin_names
+				(offset 0) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "+5V"
+				(at 0 3.556 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+5V\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "+5V_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+5V_1_1"
 				(pin power_in line
 					(at 0 0 90)
 					(length 0)
@@ -1807,6 +1892,12 @@
 		(uuid "3d300142-be01-4244-b25c-d82e75fde777")
 	)
 	(junction
+		(at 71.12 111.76)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "53785721-5951-416e-872d-be7fac64d581")
+	)
+	(junction
 		(at 205.74 85.09)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1817,6 +1908,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a0f9f825-7bd4-47d7-b453-29ae2d63748b")
+	)
+	(junction
+		(at 40.64 102.87)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ec35a3fb-4b76-4292-99e0-ccc1714112d4")
 	)
 	(junction
 		(at 113.03 92.71)
@@ -1839,16 +1936,6 @@
 			(type default)
 		)
 		(uuid "034c3b2c-922d-4314-9833-36bb0cc9bbe4")
-	)
-	(wire
-		(pts
-			(xy 71.12 96.52) (xy 71.12 99.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "06f56bb0-3d59-4068-b1df-aca5708c777b")
 	)
 	(wire
 		(pts
@@ -1902,6 +1989,16 @@
 	)
 	(wire
 		(pts
+			(xy 40.64 101.6) (xy 40.64 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29a1bcde-7927-47dd-ba0a-4274b088ecb3")
+	)
+	(wire
+		(pts
 			(xy 102.87 80.01) (xy 128.27 80.01)
 		)
 		(stroke
@@ -1909,6 +2006,16 @@
 			(type default)
 		)
 		(uuid "2a2697c0-154b-44c6-9496-f5fabaebfe5f")
+	)
+	(wire
+		(pts
+			(xy 67.31 73.66) (xy 71.12 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2a700afc-6038-43b5-98c1-36b5474e825a")
 	)
 	(wire
 		(pts
@@ -1972,13 +2079,13 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 73.66) (xy 71.12 73.66)
+			(xy 40.64 102.87) (xy 40.64 104.14)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "5f37ba34-064b-4b40-95e8-26462aa9e33f")
+		(uuid "56857902-63d6-4587-91ad-0631e4cfe483")
 	)
 	(wire
 		(pts
@@ -1989,16 +2096,6 @@
 			(type default)
 		)
 		(uuid "608a587b-8b45-476b-abe0-5c4457f6562d")
-	)
-	(wire
-		(pts
-			(xy 71.12 87.63) (xy 63.5 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "67f8a53f-33b5-46a6-a341-19c37c55aff5")
 	)
 	(wire
 		(pts
@@ -2022,6 +2119,16 @@
 	)
 	(wire
 		(pts
+			(xy 71.12 96.52) (xy 71.12 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "72fa03d1-e26f-42da-a8eb-baf1b5a40f33")
+	)
+	(wire
+		(pts
 			(xy 129.54 106.68) (xy 129.54 113.03)
 		)
 		(stroke
@@ -2042,6 +2149,46 @@
 	)
 	(wire
 		(pts
+			(xy 38.1 102.87) (xy 40.64 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8654916b-1c99-4b77-ae20-e41372d8947c")
+	)
+	(wire
+		(pts
+			(xy 57.15 87.63) (xy 59.69 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8b565055-2bab-4d97-a427-a4dd5e7b36ff")
+	)
+	(wire
+		(pts
+			(xy 67.31 87.63) (xy 71.12 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "94cfc591-3ca7-4b63-a47a-2eb9e5b57a85")
+	)
+	(wire
+		(pts
+			(xy 57.15 73.66) (xy 59.69 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9aedaab5-2b92-4655-a0c5-f9a12e61a253")
+	)
+	(wire
+		(pts
 			(xy 143.51 82.55) (xy 152.4 82.55)
 		)
 		(stroke
@@ -2049,6 +2196,16 @@
 			(type default)
 		)
 		(uuid "aa70c5bc-7811-4497-8e0b-f2a4d7a48d6d")
+	)
+	(wire
+		(pts
+			(xy 40.64 111.76) (xy 71.12 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aa915b97-747c-4206-8d0c-ada22eba9260")
 	)
 	(wire
 		(pts
@@ -2102,6 +2259,16 @@
 	)
 	(wire
 		(pts
+			(xy 40.64 102.87) (xy 53.34 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bfa38aff-9f67-4f76-aed5-0fa24226db6e")
+	)
+	(wire
+		(pts
 			(xy 205.74 85.09) (xy 205.74 87.63)
 		)
 		(stroke
@@ -2109,16 +2276,6 @@
 			(type default)
 		)
 		(uuid "c4e79e7e-c477-4d56-b01d-532628c415f4")
-	)
-	(wire
-		(pts
-			(xy 76.2 92.71) (xy 86.36 92.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c98c73be-da56-4c16-9970-bddcbaa85a12")
 	)
 	(wire
 		(pts
@@ -2132,6 +2289,26 @@
 	)
 	(wire
 		(pts
+			(xy 71.12 107.95) (xy 71.12 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d401df06-16db-492f-acbb-5c414f2dfda2")
+	)
+	(wire
+		(pts
+			(xy 71.12 113.03) (xy 71.12 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dbc3a6e1-e992-4bee-b458-35fe16f4ca5f")
+	)
+	(wire
+		(pts
 			(xy 180.34 82.55) (xy 180.34 83.82)
 		)
 		(stroke
@@ -2139,6 +2316,26 @@
 			(type default)
 		)
 		(uuid "dce595b4-1e38-4acb-900f-901b3f9e865e")
+	)
+	(wire
+		(pts
+			(xy 76.2 92.71) (xy 86.36 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dd9cf098-2c2f-4b7a-8d58-1c8d42b51307")
+	)
+	(wire
+		(pts
+			(xy 60.96 102.87) (xy 63.5 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e03f14a7-bf34-4753-8fa2-87af587dff0e")
 	)
 	(wire
 		(pts
@@ -2200,6 +2397,44 @@
 		)
 		(uuid "ff348301-0b20-4503-a2c8-3cd77d69bff1")
 	)
+	(text_box "Disables Vol Pot for Send\n"
+		(exclude_from_sim no)
+		(at 16.51 105.41 0)
+		(size 17.78 5.08)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "0356982d-cc91-400e-a9d3-8f2703004e65")
+	)
+	(text_box "Dual Output circuitry \nSoftware determines if used for stereo or for Mono out + FX Send\n"
+		(exclude_from_sim no)
+		(at 35.56 125.73 0)
+		(size 63.5 33.02)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 3 3)
+			)
+			(justify left top)
+		)
+		(uuid "3d00fabd-9e2e-4e08-b92a-ea71215ff803")
+	)
 	(text "[6] Output\n\n"
 		(exclude_from_sim no)
 		(at 126.746 23.368 0)
@@ -2211,9 +2446,20 @@
 		)
 		(uuid "a8442afe-b2f7-4611-a945-bacd77d38196")
 	)
-	(hierarchical_label "OUT_R"
+	(text "NF"
+		(exclude_from_sim no)
+		(at 45.72 96.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 255 0 0 1)
+			)
+		)
+		(uuid "d24f620d-cfed-4dc5-8b2e-16cbf18ad3f1")
+	)
+	(hierarchical_label "SEND_SW"
 		(shape input)
-		(at 63.5 87.63 180)
+		(at 38.1 102.87 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2221,11 +2467,23 @@
 			)
 			(justify right)
 		)
-		(uuid "b0815f40-918a-407a-9bd2-163e349cc9da")
+		(uuid "303124b6-7150-4bb2-b9f9-7ed35fbaacb7")
+	)
+	(hierarchical_label "OUT_R"
+		(shape input)
+		(at 57.15 87.63 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c16c83e1-3805-4a85-b350-02e7514d703f")
 	)
 	(hierarchical_label "OUT_L"
 		(shape input)
-		(at 63.5 73.66 180)
+		(at 57.15 73.66 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2237,7 +2495,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 71.12 99.06 0)
+		(at 71.12 113.03 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -2247,7 +2505,7 @@
 		(fields_autoplaced yes)
 		(uuid "0718de4c-04de-4a9e-b7c3-43b3ceaaeb87")
 		(property "Reference" "#PWR037"
-			(at 71.12 105.41 0)
+			(at 71.12 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2256,7 +2514,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 71.12 104.14 0)
+			(at 71.12 118.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2264,7 +2522,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 71.12 99.06 0)
+			(at 71.12 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2273,7 +2531,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 71.12 99.06 0)
+			(at 71.12 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2282,7 +2540,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 71.12 99.06 0)
+			(at 71.12 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2297,6 +2555,73 @@
 			(project "Ouroboros"
 				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
 					(reference "#PWR037")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 97.79 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1229f61f-c5e4-4986-a36a-4f7ceb77c9e0")
+		(property "Reference" "R35"
+			(at 42.926 97.536 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 38.354 97.536 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+			(at 42.418 97.79 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 40.64 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "9a51e362-fdef-43f4-9913-6d4a3dff0c57")
+		)
+		(pin "1"
+			(uuid "f009f2bf-441f-4786-86ee-675ceece3845")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "R35")
 					(unit 1)
 				)
 			)
@@ -2439,6 +2764,74 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 63.5 73.66 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "209dc820-7ef9-4d67-bea0-f0adc7a2d4f0")
+		(property "Reference" "R29"
+			(at 63.5 67.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 63.5 69.85 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P1.90mm_Vertical"
+			(at 63.5 75.438 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 63.5 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 63.5 73.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "113157a0-7fd7-4b47-845c-05567316769c")
+		)
+		(pin "1"
+			(uuid "441f3bc9-2ab6-4d8e-9d7c-43007967309f")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "R29")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 71.12 83.82 0)
 		(mirror y)
@@ -2573,6 +2966,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 57.15 102.87 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "41d9c523-9332-42d1-99e0-2e7f6fc1b1d8")
+		(property "Reference" "R31"
+			(at 57.404 105.156 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 57.404 107.188 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+			(at 57.15 104.648 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 57.15 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 57.15 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "b07f7c57-928b-474c-bc30-7ac9a0ba2c8d")
+		)
+		(pin "1"
+			(uuid "92e9bf47-7a9a-4e8c-bc7b-90d737add762")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "R31")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 198.12 85.09 270)
 		(unit 1)
@@ -2640,7 +3100,6 @@
 		)
 	)
 	(symbol
-		(lib_name "NMJ4HFD2_1")
 		(lib_id "Connector_Audio:NMJ4HFD2")
 		(at 210.82 82.55 180)
 		(unit 1)
@@ -2708,6 +3167,72 @@
 			(project "Ouroboros"
 				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
 					(reference "J4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 40.64 93.98 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4d7e9f99-11df-4a41-9741-848679a5e9af")
+		(property "Reference" "#PWR056"
+			(at 40.64 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+5V"
+			(at 40.64 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 40.64 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 40.64 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 40.64 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c6fa6413-582c-47a6-9f72-221cca68a28a")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "#PWR056")
 					(unit 1)
 				)
 			)
@@ -3336,6 +3861,73 @@
 	)
 	(symbol
 		(lib_id "Device:R")
+		(at 40.64 107.95 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a7fd2ed0-d89a-4585-a0d7-b9bcfa46b6dc")
+		(property "Reference" "R32"
+			(at 42.926 107.696 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 38.354 107.696 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+			(at 42.418 107.95 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 40.64 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "a245a89a-5885-4066-aa4f-004ab5f12e74")
+		)
+		(pin "1"
+			(uuid "36b6335f-15fb-4e2b-8e54-2c2e50727dca")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "R32")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
 		(at 113.03 67.31 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -3683,6 +4275,73 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 63.5 87.63 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c8e2b4c8-5864-40f7-acb5-a39c877c4fc0")
+		(property "Reference" "R30"
+			(at 63.754 89.916 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0R"
+			(at 63.754 91.948 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P1.90mm_Vertical"
+			(at 63.5 89.408 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 63.5 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 63.5 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "f81115b4-6d6f-4818-98b0-c8c36ddd52b0")
+		)
+		(pin "1"
+			(uuid "7be10097-7d74-45f9-82dd-bd64f443a97f")
+		)
+		(instances
+			(project "Ouroboros"
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "R30")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 170.18 104.14 90)
 		(unit 1)
@@ -3963,6 +4622,82 @@
 		)
 	)
 	(symbol
+		(lib_id "Transistor_FET:BF244A")
+		(at 68.58 102.87 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f24af037-0f0f-4436-82b2-b110a4c3d440")
+		(property "Reference" "Q1"
+			(at 73.66 101.5999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "BF244A"
+			(at 73.66 104.1399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_THT:TO-92_Inline"
+			(at 73.66 104.775 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Fairchild%20PDFs/BF244x.pdf"
+			(at 73.66 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "50mA Id, 30V Vgs, N-Channel FET Transistor, TO-92"
+			(at 68.58 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4f42715f-a149-484f-935c-ea907323474c")
+		)
+		(pin "1"
+			(uuid "d34af0d8-e281-428d-ac9b-1afccc9ada56")
+		)
+		(pin "3"
+			(uuid "83425a6e-2518-40f4-9664-8045c03f12a2")
+		)
+		(instances
+			(project ""
+				(path "/a2662f7c-8239-40ad-828c-dd886b1cb258/0ea42127-fe6e-460f-9142-8a11a130b271"
+					(reference "Q1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Amplifier_Operational:TL074")
 		(at 137.16 104.14 0)
 		(unit 4)
@@ -4052,46 +4787,46 @@
 			)
 		)
 		(pin "8"
-			(uuid "ffc8cd23-157e-4fbc-86c2-e16e466be057")
+			(uuid "ffc8cd23-157e-4fbc-86c2-e16e466be058")
 		)
 		(pin "5"
-			(uuid "424801cd-e6f4-4ca8-b41b-55096b6b507d")
+			(uuid "424801cd-e6f4-4ca8-b41b-55096b6b507e")
 		)
 		(pin "7"
-			(uuid "fa2d2bc0-7a11-4b9c-85b9-a9cc7b20224d")
+			(uuid "fa2d2bc0-7a11-4b9c-85b9-a9cc7b20224e")
 		)
 		(pin "14"
-			(uuid "ca067672-a190-4076-8022-7f3b205f0b43")
+			(uuid "ca067672-a190-4076-8022-7f3b205f0b44")
 		)
 		(pin "4"
-			(uuid "6cc268c0-f1a1-4881-8c39-08471b703905")
+			(uuid "6cc268c0-f1a1-4881-8c39-08471b703906")
 		)
 		(pin "9"
-			(uuid "8ce3cf04-deee-45cf-95ab-add050062f88")
+			(uuid "8ce3cf04-deee-45cf-95ab-add050062f89")
 		)
 		(pin "13"
-			(uuid "ec46b068-eece-4440-96e4-ea9527e6065f")
+			(uuid "ec46b068-eece-4440-96e4-ea9527e60660")
 		)
 		(pin "2"
 			(uuid "d0784e33-e864-45a9-a518-dbf41cb6fbd3")
 		)
 		(pin "12"
-			(uuid "05d9261b-a957-4f2e-b4c6-49c288e46767")
+			(uuid "05d9261b-a957-4f2e-b4c6-49c288e46768")
 		)
 		(pin "1"
 			(uuid "a58ebef8-c4ee-4d67-9094-7fc8cf9458b8")
 		)
 		(pin "10"
-			(uuid "dd72e961-923c-4710-a09e-3ba58045213d")
+			(uuid "dd72e961-923c-4710-a09e-3ba58045213e")
 		)
 		(pin "6"
-			(uuid "f3fef053-51eb-48cd-9af0-363ca2766377")
+			(uuid "f3fef053-51eb-48cd-9af0-363ca2766378")
 		)
 		(pin "3"
 			(uuid "9c1173d7-f68a-4d5e-98dc-4acb3b667b0b")
 		)
 		(pin "11"
-			(uuid "fc414d9f-078f-477d-b815-708ed008581a")
+			(uuid "fc414d9f-078f-477d-b815-708ed008581b")
 		)
 		(instances
 			(project "Ouroboros"

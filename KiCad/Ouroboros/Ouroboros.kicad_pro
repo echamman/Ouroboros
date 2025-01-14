@@ -466,7 +466,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "FabOuts/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
