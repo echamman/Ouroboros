@@ -150,13 +150,23 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         del_out = del.Read();
 
         // Calculate output and feedback
-        feedback = (del_out * delayFDBK) + (sig_outL);
+        // Process external send/return feed if enabled
+        if((outStatus == sendRet) && effectOn){
+            out[RIGHT] = del_out;
+        }
+        
+        feedback = ( del_out * delayFDBK) + (sig_outL);
 
         // Write to the delay
         del.Write(feedback);
 
         //Add delay to output chain
-        sig_outL = (sig_outL * (1-wetBlend)) + (del_out * wetBlend);
+        if((outStatus == sendRet) && effectOn){
+            sig_outL = (sig_outL * (1-wetBlend)) + (in[RIGHT] * wetBlend);
+        }else{
+            sig_outL = (sig_outL * (1-wetBlend)) + (del_out * wetBlend);
+        }
+
         sig_outR = sig_outL;
 
         // Reverb writes to output
@@ -165,7 +175,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         // Output
         if(effectOn){
             out[LEFT]  = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
-            out[RIGHT] = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outR);
+            //out[RIGHT] = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outR);
         }else{
             out[LEFT]  = in[LEFT];
             out[RIGHT] = in[RIGHT];
@@ -223,7 +233,7 @@ int main(void)
 
         // Effect on or off
         if(buttons[toggleSw].RisingEdge()){
-            System::Delay(100);
+            System::Delay(50);
             if(buttons[divisionSw].Pressed()){
 
                 outStatus = ((outStatus + 1) % NUM_STATES);
