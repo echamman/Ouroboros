@@ -136,32 +136,36 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         tempo.Process();
 
+        // Chorus Processing
+
+        flutter.Process(in[LEFT]);
+        wow_outL = flutter.GetLeft();
+        //wow_outR = flutter.GetRight();
+
+        sig_outL = ((1-wow) * in[LEFT]) + (1.5 * wow * wow_outL);
+
+        // Delay Processing 
+
         // Read from delay line
         del_out = del.Read();
+
         // Calculate output and feedback
-        feedback = (del_out * delayFDBK) + in[LEFT];
+        feedback = (del_out * delayFDBK) + (sig_outL);
 
         // Write to the delay
         del.Write(feedback);
-        flutter.Process(del_out + in[LEFT]);
 
-        wow_outL = flutter.GetLeft();
-        wow_outR = flutter.GetRight();
-
-        //Form signal output with delay and wow
-        wow_del_outL = (wow * wow_outL) + ((1-wow) * del_out);
-        wow_del_outR = (wow * wow_outR) + ((1-wow) * del_out);
-
-        sig_outL = (wow_del_outL * wetBlend) + ((1 - wow) * in[LEFT]);
-        sig_outR = (wow_del_outR * wetBlend) + ((1 - wow) * in[RIGHT]);
+        //Add delay to output chain
+        sig_outL = (sig_outL * (1-wetBlend)) + (del_out * wetBlend);
+        sig_outR = sig_outL;
 
         // Reverb writes to output
         verb.Process(sig_outL, sig_outR, &verb_outL, &verb_outR);
 
         // Output
         if(effectOn){
-            out[LEFT]  = (1-verbBlend)*sig_outL + verbBlend*verb_outL;
-            out[RIGHT] = (1-verbBlend)*sig_outL + verbBlend*verb_outR;
+            out[LEFT]  = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
+            out[RIGHT] = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outR);
         }else{
             out[LEFT]  = in[LEFT];
             out[RIGHT] = in[RIGHT];
