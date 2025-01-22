@@ -55,7 +55,7 @@ uint64_t tempoManager::getTempo(){
 
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
-    float delayKnob = std::trunc(hw.adc.GetFloat(rateKnob)*100.0f)/100.0f;
+    float delayKnob = std::trunc((1.0 -hw.adc.GetFloat(rateKnob))*100.0f)/100.0f;
 
     float min = preset.getDelayMin();
     float range = preset.getDelayRange();

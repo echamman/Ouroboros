@@ -1,0 +1,35 @@
+﻿Reference,Value,Datasheet,Footprint,Qty,Tayda Cart,Tayda SKU
+A1,Electrosmith_Daisy_Seed_Rev4,https://static1.squarespace.com/static/58d03fdc1b10e3bf442567b8/t/6227e6236f02fb68d1577146/1646781988478/Daisy_Seed_datasheet_v1.0.3.pdf,Module:Electrosmith_Daisy_Seed,1,0,
+"C1,C15,C21",100p,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,3,10,A-531
+"C2,C10,C12,C13,C16,C17,C18,C19,C20,C22",1u,~,-- mixed values --,10,20,
+"C3,C23",1n,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,2,,
+"C4,C7,C8,C9,C24",100n,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,5,50,
+C5,330n,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,1,,
+C6,100u,~,Capacitor_THT:CP_Radial_D5.0mm_P2.50mm,1,,
+C11,47u,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,1,,
+C14,0.47u,~,Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm,1,,
+"D1,D2",1N4148,https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf,Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal,2,,
+D3,1N4001,http://www.vishay.com/docs/88503/1n4001.pdf,Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal,1,,
+"D4,D5,D6,D7,D8,D9",LED,~,LED_THT:LED_D3.0mm,6,,
+H1,GND,~,TestPoint:TestPoint_THTPad_D1.5mm_Drill0.7mm,1,,
+H2,VCC,~,TestPoint:TestPoint_THTPad_D1.5mm_Drill0.7mm,1,,
+H3,SCL,~,TestPoint:TestPoint_THTPad_D1.5mm_Drill0.7mm,1,,
+H4,SDA,~,TestPoint:TestPoint_THTPad_D1.5mm_Drill0.7mm,1,,
+"J1,J3,J4,J5",AudioJack2,https://www.neutrik.com/en/product/nmj4hfd2,Connector_Audio:Jack_6.35mm_Neutrik_NMJ4HFD2_Horizontal,4,8,A-6041
+J2,Jack-DC,~,Connector_BarrelJack:BarrelJack_CUI_PJ-063AH_Horizontal_CircularHoles,1,,
+Q1,BF244A,https://media.digikey.com/pdf/Data%20Sheets/Fairchild%20PDFs/BF244x.pdf,Package_TO_SOT_THT:TO-92_Inline,1,,
+"R1,R4,R5,R6,R7,R8,R11,R17,R18,R19,R20,R21,R22,R23,R31,R32,R35",1k,~,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,17,,
+"R2,R10",10k,~,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,2,,
+"R3,R9,R12,R24",470k,~,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,4,,
+"R13,R14",100R,~,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,2,,
+"R15,R16",100k,~,Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,2,,
+"R25,R26,R27,R28,R29,R30,R33,R34",0R,~,-- mixed values --,8,,
+RV1,A10k,~,Potentiometer_THT:Potentiometer_Alpha_RD901F-40-00D_Single_Vertical,1,3, A-1856
+"RV2,RV3,RV4,RV5,RV6,RV7",B10k,~,Potentiometer_THT:Potentiometer_Alpha_RD901F-40-00D_Single_Vertical,6,12,A-1847
+RV8,B10K,~,Potentiometer_THT:Potentiometer_Alpha_RD902F-40-00D_Dual_Vertical,1,3,A-6433
+SW1,SW_DPDT_x2,~,Library:DPDT_Mini_Toggle,1,2,A-4568
+"SW2,SW3,SW4,SW5",SW_Push,~,Button_Switch_Keyboard:SW_Cherry_MX_1.00u_PCB,4,,
+U1,Opamp_Quad,http://www.ti.com/lit/ds/symlink/tl071.pdf,Package_DIP:DIP-14_W7.62mm_Socket,1,,
+U2,Opamp_Dual,~,Package_DIP:DIP-8_W7.62mm_Socket,1,,
+U3,LM78L05_TO92,https://www.onsemi.com/pub/Collateral/MC78L06A-D.pdf,Package_TO_SOT_THT:TO-92_Inline,1,,
+

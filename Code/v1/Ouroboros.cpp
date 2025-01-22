@@ -5,8 +5,10 @@
 #include "src/tempoManager/tempoManager.h"
 
 // Interleaved audio definitions
-#define LEFT (i)
+// Schematic is messed up, fixing in code
+// 
 #define RIGHT (i + 1)
+#define LEFT (i)
 
 // For DEBUGGING
 CpuLoadMeter loadMeter;
@@ -14,12 +16,14 @@ CpuLoadMeter loadMeter;
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 0.75f)
 
+// Enum for readability
 enum AdcChannel {
     rateKnob = 0,
     fdbkKnob,
     spaceKnob,
     wowKnob,
     blendKnob,
+    filtKnob,
     NUM_ADC_CHANNELS
 };
 
@@ -27,8 +31,30 @@ enum Switches {
     programSw = 0,
     divisionSw,
     tempoSw,
+    toggleSw,
     NUM_SWITCHES
 };
+
+enum LEDs {
+    D0 = 0,
+    D1,
+    D2,
+    D3,
+    D4,
+    D5,
+    NUM_LEDS
+};
+
+// Output states
+enum outStates {
+    mono = 0,
+    sendRet,
+    stereo,
+    NUM_STATES
+};
+
+// Send/Stereo out toggle
+#define SEND_SW 10
 
 using namespace daisysp;
 using namespace daisy;
@@ -44,6 +70,8 @@ DaisySeed hw;
 
 AdcChannelConfig adcConfig[NUM_ADC_CHANNELS];
 Switch buttons[NUM_SWITCHES];
+GPIO LEDS[NUM_LEDS];
+GPIO sendSw;
 
 // Global variable holds sample rate
 float sample_rate;
@@ -61,6 +89,10 @@ float verbBlend;
 float wetBlend;
 // Declare a variable to store the state we want to set for the LED.
 volatile bool led_state = true;
+
+volatile bool effectOn = true;
+
+int outStatus = sendRet;
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
@@ -83,6 +115,8 @@ static tempoManager tempo;
 // Preset Manager
 static presets presetManager;
 
+
+// TODO Rewrite and optimize signal path
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
@@ -125,8 +159,13 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         verb.Process(sig_outL, sig_outR, &verb_outL, &verb_outR);
 
         // Output
-        out[LEFT]  = (1-verbBlend)*sig_outL + verbBlend*verb_outL;
-        out[RIGHT] = (1-verbBlend)*sig_outL + verbBlend*verb_outR;
+        if(effectOn){
+            out[LEFT]  = (1-verbBlend)*sig_outL + verbBlend*verb_outL;
+            out[RIGHT] = (1-verbBlend)*sig_outL + verbBlend*verb_outR;
+        }else{
+            out[LEFT]  = in[LEFT];
+            out[RIGHT] = in[RIGHT];
+        }
     }
 
     //loadMeter.OnBlockEnd();
@@ -148,19 +187,22 @@ int main(void)
         const float maxLoad = loadMeter.GetMaxCpuLoad();
         const float minLoad = loadMeter.GetMinCpuLoad();
 
-        // Set the onboard LED
-        hw.SetLed(led_state);
+        // Set the rate LED
+        LEDS[D2].Write(led_state);
 
         //Debounce the button
         buttons[programSw].Debounce();
         buttons[tempoSw].Debounce();
         buttons[divisionSw].Debounce();
+        buttons[toggleSw].Debounce();
 
         // Read inputs and update delay and verb variables
         updateDelay();
         updateReverb();
         updateFlutter();
 
+
+        // TODO: Better button reading, for multiple pushed at once options
         if(buttons[programSw].FallingEdge()){
             presetManager.nextPreset();
         }
@@ -175,14 +217,37 @@ int main(void)
             tempo.pressEvent();
         }
 
+        // Effect on or off
+        if(buttons[toggleSw].RisingEdge()){
+            System::Delay(100);
+            if(buttons[divisionSw].Pressed()){
+
+                outStatus = ((outStatus + 1) % NUM_STATES);
+
+                if(outStatus == mono){
+                    LEDS[D3].Write(true);
+                    LEDS[D4].Write(false);
+                }else if(outStatus == sendRet){
+                    LEDS[D3].Write(false);
+                    LEDS[D4].Write(true);
+                }else{
+                    LEDS[D3].Write(false);
+                    LEDS[D4].Write(false);
+                }
+            }else{
+                effectOn = !effectOn;
+                LEDS[D0].Write(effectOn);
+            }
+        }
+
         //Print to display
         dLines[0] = "Preset: " + presetManager.getPresetName();
         dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
-        dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f));
-        dLines[3] = "SPACE: " + std::to_string((int)floor(hw.adc.GetFloat(spaceKnob)*100.00f));
-        dLines[4] = "WOW: " + std::to_string((int)floor(hw.adc.GetFloat(wowKnob)*100.00f));
-        //(buttons[programSw].Pressed() ? dLines[4] = "Button: true" : dLines[4] = "Button: false");
-        //dLines[4] = "Loads: " + std::to_string((int)(avgLoad*100.0f)) + " " + std::to_string((int)(maxLoad * 100.0f));// + " " + std::to_string((int)maxLoad);
+        dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f)) +\
+         " | SPACE: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(spaceKnob))*100.00f));
+        dLines[3] = "WOW: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(wowKnob))*100.00f)) +\
+         " | BLEND: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(blendKnob))*100.00f));
+        dLines[4] = "FILT: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(filtKnob))*100.00f)) + " | State: " + std::to_string(outStatus);;
         dLines[5] = "";
         display.print(dLines, 6);
 
@@ -208,12 +273,28 @@ int OuroborosInit(){
     adcConfig[spaceKnob].InitSingle(hw.GetPin(17));
     adcConfig[wowKnob].InitSingle(hw.GetPin(18));
     adcConfig[blendKnob].InitSingle(hw.GetPin(19));
+    adcConfig[filtKnob].InitSingle(hw.GetPin(20));
 
     // Initialize Buttons
     buttons[programSw].Init(hw.GetPin(26), 1000);
-    buttons[divisionSw].Init(hw.GetPin(27), 1000);
-    buttons[tempoSw].Init(hw.GetPin(25), 1000);
+    buttons[divisionSw].Init(hw.GetPin(25), 1000);
+    buttons[tempoSw].Init(hw.GetPin(27), 1000);
+    buttons[toggleSw].Init(hw.GetPin(24), 1000);
 
+    // Initialize LEDs - Mapped top to bottom from schematic
+    LEDS[D0].Init(daisy::seed::D6, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    LEDS[D1].Init(daisy::seed::D5, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    LEDS[D2].Init(daisy::seed::D4, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::HIGH);
+    LEDS[D3].Init(daisy::seed::D3, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    LEDS[D4].Init(daisy::seed::D2, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    LEDS[D5].Init(daisy::seed::D1, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+
+    LEDS[D0].Write(effectOn);
+
+    // Initialize Send/Stereo toggle switch
+    // HIGH = Stereo, Low = Send (Low disables volume knob on output R)
+    sendSw.Init(daisy::seed::D10, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    
     //Initialize the adc with the config we just made
     hw.adc.Init(adcConfig, NUM_ADC_CHANNELS);
 
@@ -251,7 +332,7 @@ void updateDelay(){
     // TODO standardize tempo as either float in seconds or int64_t in ms
     delaytime = ((float)tempo.getTempo()) / 1000.0f;
     
-    wetBlend = std::trunc(hw.adc.GetFloat(blendKnob)*100.0f)/100.0f;
+    wetBlend = std::trunc((1.0 - hw.adc.GetFloat(blendKnob))*100.0f)/100.0f;
 
     // Set delay to value between 1 and 103ms, set metro to freq
     del.SetDelay(sample_rate * (delaytime / (float)divisions));
@@ -270,11 +351,11 @@ void updateReverb(){
 
     // Read and scale appropriate knobs
     // Truncates the pot reading to 2 decimal points
-    float rFDBK = std::trunc(hw.adc.GetFloat(fdbkKnob)*100.0f)/100.0f;
+    float rFDBK = std::trunc((1.0 - hw.adc.GetFloat(fdbkKnob))*100.0f)/100.0f;
     rFDBK = min + (rFDBK * range); 
     delayFDBK = rFDBK;
 
-    float rBlend = std::trunc(hw.adc.GetFloat(spaceKnob)*100.0f)/100.0f;
+    float rBlend = std::trunc((1.0 - hw.adc.GetFloat(spaceKnob))*100.0f)/100.0f;
 
     verb.SetFeedback(rFDBK);
     verbBlend = rBlend;
@@ -284,7 +365,7 @@ void updateFlutter(){
 
     // Read and scale appropriate knobs
     // Truncates the pot reading to 2 decimal points
-    float flutterAm = std::trunc(hw.adc.GetFloat(wowKnob)*100.0f)/100.0f;
+    float flutterAm = std::trunc((1.0 - hw.adc.GetFloat(wowKnob))*100.0f)/100.0f;
     wow = flutterAm;
 
     flutter.SetLfoFreq(0.3f + flutterAm * 0.7f);
