@@ -90,6 +90,7 @@ float verbBlend;
 float wetBlend;
 // Filter Frequency and state
 float filtFreq;
+bool filtEnable;
 // Declare a variable to store the state we want to set for the LED.
 volatile bool led_state = true;
 
@@ -179,7 +180,9 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         sig_outL = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
 
         // Apply LP filter to everything
-        sig_outL = filter.Process(sig_outL);
+        if(filtEnable){
+            sig_outL = filter.Process(sig_outL);
+        }
 
         // Output
         if(effectOn){
@@ -406,9 +409,24 @@ void updateFlutter(){
 void updateFilter(){
     
     // Read and scale appropriate knobs
-    // Truncates the pot reading to 2 decimal points
-    float filterFreq = std::trunc((1.0 - hw.adc.GetFloat(filtKnob))*100.0f)/100.0f;
-    filtFreq = filterFreq * 0.2f; // Max value of filter is 0.497f
+    // Truncates the pot reading to 2 decimal points - 0.01 to 1.00
+    float filterKnob = std::trunc(((1.0f - hw.adc.GetFloat(filtKnob))*100.0f) + 1.0f )/100.0f;
+
+    // Filter knob at noon is no filter
+    // Filter knob to left is Low Pass
+    // Filter knob to right is High Pass
+
+    if(filterKnob < 0.48){
+        filter.SetFilterMode(daisysp::OnePole::FILTER_MODE_LOW_PASS);
+        filtFreq = filterKnob * 0.3;    // Magic number that sounds good
+        filtEnable = true;
+    }else if (filterKnob > 0.52){
+        filter.SetFilterMode(daisysp::OnePole::FILTER_MODE_HIGH_PASS);
+        filtFreq = (filterKnob - 0.52) * 0.1;    // Magic number that sounds good
+        filtEnable = true;
+    }else{
+        filtEnable = false;
+    }
 
     filter.SetFrequency(filtFreq);
 }
