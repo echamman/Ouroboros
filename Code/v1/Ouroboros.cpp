@@ -5,8 +5,6 @@
 #include "src/tempoManager/tempoManager.h"
 
 // Interleaved audio definitions
-// Schematic is messed up, fixing in code
-// 
 #define RIGHT (i + 1)
 #define LEFT (i)
 
@@ -145,9 +143,14 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         flutter.Process(in[LEFT]);
         wow_outL = flutter.GetLeft();
-        //wow_outR = flutter.GetRight();
+        if(outStatus == stereo){
+            flutter.Process(in[RIGHT]);
+            wow_outR = flutter.GetRight();
+        }
+
 
         sig_outL = ((1-wow) * in[LEFT]) + (1.5 * wow * wow_outL);
+        sig_outR = ((1-wow) * in[RIGHT]) + (1.5 * wow * wow_outR);
 
         // Delay Processing 
 
@@ -170,24 +173,33 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
             sig_outL = (sig_outL * (1-wetBlend)) + (in[RIGHT] * wetBlend);
         }else{
             sig_outL = (sig_outL * (1-wetBlend)) + (del_out * wetBlend);
+            sig_outR = (sig_outR * (1-wetBlend)) + (del_out * wetBlend);
         }
 
-        sig_outR = sig_outL;
+        if(outStatus != stereo){
+            sig_outR = sig_outL;
+        }
 
         // Reverb writes to output
         verb.Process(sig_outL, sig_outR, &verb_outL, &verb_outR);
 
         sig_outL = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
+        sig_outR = (1-verbBlend)*sig_outR + (2.0 * verbBlend * verb_outR);
 
         // Apply LP filter to everything
         if(filtEnable){
             sig_outL = filter.Process(sig_outL);
+            sig_outR = filter.Process(sig_outR);
         }
 
-        // Output
+        // Final Output
         if(effectOn){
+
             out[LEFT]  = sig_outL;
-            //out[RIGHT] = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outR);
+            if(outStatus == stereo){
+                out[RIGHT]  = sig_outR;
+            }
+
         }else{
             out[LEFT]  = in[LEFT];
             out[RIGHT] = in[RIGHT];
