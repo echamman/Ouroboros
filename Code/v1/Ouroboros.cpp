@@ -64,6 +64,7 @@ int OuroborosInit();
 void updateDelay();
 void updateReverb();
 void updateFlutter();
+void updateFilter();
 
 // Declare a DaisySeed object called hardware
 DaisySeed hw;
@@ -87,6 +88,8 @@ float wow = 0.0f;
 float verbBlend;
 // Blends delay and wow
 float wetBlend;
+// Filter Frequency and state
+float filtFreq;
 // Declare a variable to store the state we want to set for the LED.
 volatile bool led_state = true;
 
@@ -103,6 +106,9 @@ static ReverbSc DSY_SDRAM_BSS verb;
 // Create chorus for a flutter effect
 static Chorus flutter;
 
+// Create filter object
+static OnePole filter;
+
 // Metro 
 static Metro tick;
 
@@ -115,8 +121,6 @@ static tempoManager tempo;
 // Preset Manager
 static presets presetManager;
 
-
-// TODO Rewrite and optimize signal path
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
                           AudioHandle::InterleavingOutputBuffer out,
                           size_t                                size)
@@ -172,9 +176,14 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         // Reverb writes to output
         verb.Process(sig_outL, sig_outR, &verb_outL, &verb_outR);
 
+        sig_outL = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
+
+        // Apply LP filter to everything
+        sig_outL = filter.Process(sig_outL);
+
         // Output
         if(effectOn){
-            out[LEFT]  = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outL);
+            out[LEFT]  = sig_outL;
             //out[RIGHT] = (1-verbBlend)*sig_outL + (2.0 * verbBlend * verb_outR);
         }else{
             out[LEFT]  = in[LEFT];
@@ -214,7 +223,7 @@ int main(void)
         updateDelay();
         updateReverb();
         updateFlutter();
-
+        updateFilter();
 
         // TODO: Better button reading, for multiple pushed at once options
         if(buttons[programSw].FallingEdge()){
@@ -276,9 +285,15 @@ int OuroborosInit(){
     hw.Init();
     hw.SetAudioBlockSize(4);
     sample_rate = hw.AudioSampleRate();
+
     del.Init();
+
+    filter.Init();
+    filter.SetFrequency(0.497f);
+
     verb.Init(sample_rate);
     verb.SetLpFreq(18000.0f);
+
     tempo.Init(sample_rate, &hw, rateKnob, &presetManager);
 
     // Initialize knobs
@@ -386,4 +401,14 @@ void updateFlutter(){
     flutter.SetLfoDepth(0.6f + flutterAm * 0.4f);
     flutter.SetDelay(0.5f + flutterAm * 0.5f);
     flutter.SetFeedback(0.3f + flutterAm * 0.4f);
+}
+
+void updateFilter(){
+    
+    // Read and scale appropriate knobs
+    // Truncates the pot reading to 2 decimal points
+    float filterFreq = std::trunc((1.0 - hw.adc.GetFloat(filtKnob))*100.0f)/100.0f;
+    filtFreq = filterFreq * 0.2f; // Max value of filter is 0.497f
+
+    filter.SetFrequency(filtFreq);
 }
