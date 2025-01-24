@@ -207,6 +207,8 @@ int main(void)
 
     string dLines[6]; //Create an Array of strings for the OLED display
 
+    bool doUpdate = true;
+
     // Loop forever
     for(;;)
     {
@@ -216,11 +218,9 @@ int main(void)
         const float maxLoad = loadMeter.GetMaxCpuLoad();
         const float minLoad = loadMeter.GetMinCpuLoad();
 
-
-
         // Read inputs and update delay and verb variables
-        updateDelay();
-        if(knobs.checkKnobs()){
+        if(doUpdate){
+            updateDelay();
             updateReverb();
             updateFlutter();
             updateFilter();
@@ -228,27 +228,32 @@ int main(void)
 
         switch(buttons.Process()){
             case 0:
+                doUpdate = knobs.checkKnobs();
                 break;
 
             // Preset Button
             case 1:
                 presetManager.nextPreset();
+                doUpdate = true;
                 break;
 
             // Div button
             case 2: 
                 divisions = ((divisions) % 4) + 1;
+                doUpdate = true;
                 break;
 
             //tempo button
             case 3: 
                 tempo.pressEvent();
+                doUpdate = true;
                 break;
 
             // Effect On/Off Button
             case 4: 
                 effectOn = !effectOn;
                 LEDS[D0].Write(effectOn);
+                doUpdate = true;
                 break;
 
             // Mode Change 
@@ -268,23 +273,27 @@ int main(void)
                     LEDS[D4].Write(false);
                     sendSw.Write(true);
                 }
+
+                doUpdate = true;
                 break;
             default:
+                doUpdate = knobs.checkKnobs();
                 break;
         }
 
         
         //Print to display
-        dLines[0] = "Preset: " + presetManager.getPresetName();
-        dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
-        dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f)) +\
-         " | SPACE: " + knobs.readKnobString(spaceKnob);
-        dLines[3] = "WOW: " + knobs.readKnobString(wowKnob) +\
-         " | BLEND: " + knobs.readKnobString(blendKnob);
-        dLines[4] = "FILT: " + knobs.readKnobString(filtKnob) + " | STATE: " + displayStatus[outStatus];
-        dLines[5] = "";
-        display.print(dLines, 6);
-
+        if(doUpdate){
+            dLines[0] = "Preset: " + presetManager.getPresetName();
+            dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
+            dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f)) +\
+            " | SPACE: " + knobs.readKnobString(spaceKnob);
+            dLines[3] = "WOW: " + knobs.readKnobString(wowKnob) +\
+            " | BLEND: " + knobs.readKnobString(blendKnob);
+            dLines[4] = "FILT: " + knobs.readKnobString(filtKnob) + " | STATE: " + displayStatus[outStatus];
+            dLines[5] = "";
+            display.print(dLines, 6);
+        }
     }
 }
 

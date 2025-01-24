@@ -70,7 +70,7 @@ uint64_t tempoManager::getTempo(){
     delaybuf[0] = delayKnob;
 
     // Only update delay if knob has been turned sufficiently
-    if( delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
+    if( 1 || delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
         delaytime = (min + (delayKnob * range));
 
         if(abs(delaytime - ((float)(knobTempo))/1000.0f) > 0.01f){
