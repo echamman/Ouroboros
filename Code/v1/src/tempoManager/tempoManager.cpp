@@ -1,11 +1,12 @@
 #include "tempoManager.h"
 
-void tempoManager::Init(float samprate, DaisySeed *seed, int knob, presets *presetManager){
+void tempoManager::Init(float samprate, DaisySeed *seed, int knob, presets *presetManager, knobManager *knobs){
 
     sample_rate = samprate;
     rateKnob = knob;
     preset = *presetManager;
     hw = *seed;
+    knobMan = *knobs;
 
     //Fill buffer
     for(int i = 0; i < 3; i++){
@@ -55,7 +56,7 @@ uint64_t tempoManager::getTempo(){
 
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
-    float delayKnob = std::trunc((1.0 -hw.adc.GetFloat(rateKnob))*100.0f)/100.0f;
+    float delayKnob = knobMan.readKnob(rateKnob);
 
     float min = preset.getDelayMin();
     float range = preset.getDelayRange();

@@ -9,6 +9,7 @@
 #include "daisysp.h"
 #include "daisy_seed.h"
 #include "../Presets/presets.h"
+#include "../knobManager/knobManager.h"
 #include <chrono>
 
 #define MAX_DELAY_S 8       // 8 second recording buffer for sampling
@@ -35,13 +36,14 @@ class tempoManager{
         int rateKnob;               // ADC Value to read knob
         DaisySeed hw;
         presets preset;
+        knobManager knobMan;
 
         // Resets tempo counter 
         void resetCount();
 
     public:
         // Initializes tap tempo module
-        void Init(float sample_rate, DaisySeed *seed, int knob, presets *presetManager);
+        void Init(float sample_rate, DaisySeed *seed, int knob, presets *presetManager, knobManager *knobs);
 
         // Processed at sample rate frequency
         void Process();
