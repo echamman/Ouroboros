@@ -3,6 +3,7 @@
 #include "src/OLED/OLED.h"
 #include "src/Presets/presets.h"
 #include "src/tempoManager/tempoManager.h"
+#include "src/buttonManager/buttonManager.h"
 
 // Interleaved audio definitions
 #define RIGHT (i + 1)
@@ -23,14 +24,6 @@ enum AdcChannel {
     blendKnob,
     filtKnob,
     NUM_ADC_CHANNELS
-};
-
-enum Switches {
-    programSw = 0,
-    divisionSw,
-    tempoSw,
-    toggleSw,
-    NUM_SWITCHES
 };
 
 enum LEDs {
@@ -68,7 +61,6 @@ void updateFilter();
 DaisySeed hw;
 
 AdcChannelConfig adcConfig[NUM_ADC_CHANNELS];
-Switch buttons[NUM_SWITCHES];
 GPIO LEDS[NUM_LEDS];
 GPIO sendSw;
 
@@ -95,6 +87,7 @@ volatile bool led_state = true;
 volatile bool effectOn = true;
 
 int outStatus = sendRet;
+string displayStatus[NUM_STATES] = { "MON", "S/R", "STR"};
 
 // Declare a DelayLine of MAX_DELAY number of floats.
 static DelayLine<float, MAX_DELAY> del;
@@ -116,6 +109,9 @@ static Oled display;
 
 // Tempo manager
 static tempoManager tempo;
+
+// Button Manager
+static buttonManager buttons;
 
 // Preset Manager
 static presets presetManager;
@@ -228,18 +224,51 @@ int main(void)
         // Set the rate LED
         LEDS[D2].Write(led_state);
 
-        //Debounce the button
-        buttons[programSw].Debounce();
-        buttons[tempoSw].Debounce();
-        buttons[divisionSw].Debounce();
-        buttons[toggleSw].Debounce();
-
         // Read inputs and update delay and verb variables
         updateDelay();
         updateReverb();
         updateFlutter();
         updateFilter();
 
+        switch(buttons.Process()){
+            case 0:
+                break;
+            case 1:
+                presetManager.nextPreset();
+                break;
+            case 2: 
+                divisions = ((divisions) % 4) + 1;
+                break;
+            case 3: 
+                tempo.pressEvent();
+                break;
+            case 4: 
+                effectOn = !effectOn;
+                LEDS[D0].Write(effectOn);
+                break;
+            case 5:
+                outStatus = ((outStatus + 1) % NUM_STATES);
+
+                if(outStatus == mono){
+                    LEDS[D3].Write(true);
+                    LEDS[D4].Write(false);
+                    sendSw.Write(false);
+                }else if(outStatus == sendRet){
+                    LEDS[D3].Write(false);
+                    LEDS[D4].Write(true);
+                    sendSw.Write(false);
+                }else{
+                    LEDS[D3].Write(false);
+                    LEDS[D4].Write(false);
+                    sendSw.Write(true);
+                }
+                break;
+            default:
+                break;
+        }
+
+
+        /*
         // TODO: Better button reading, for multiple pushed at once options
         if(buttons[programSw].FallingEdge()){
             presetManager.nextPreset();
@@ -265,18 +294,21 @@ int main(void)
                 if(outStatus == mono){
                     LEDS[D3].Write(true);
                     LEDS[D4].Write(false);
+                    sendSw.Write(false);
                 }else if(outStatus == sendRet){
                     LEDS[D3].Write(false);
                     LEDS[D4].Write(true);
+                    sendSw.Write(false);
                 }else{
                     LEDS[D3].Write(false);
                     LEDS[D4].Write(false);
+                    sendSw.Write(true);
                 }
             }else{
                 effectOn = !effectOn;
                 LEDS[D0].Write(effectOn);
             }
-        }
+        }*/
 
         //Print to display
         dLines[0] = "Preset: " + presetManager.getPresetName();
@@ -285,7 +317,7 @@ int main(void)
          " | SPACE: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(spaceKnob))*100.00f));
         dLines[3] = "WOW: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(wowKnob))*100.00f)) +\
          " | BLEND: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(blendKnob))*100.00f));
-        dLines[4] = "FILT: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(filtKnob))*100.00f)) + " | State: " + std::to_string(outStatus);;
+        dLines[4] = "FILT: " + std::to_string((int)floor((1.0 - hw.adc.GetFloat(filtKnob))*100.00f)) + " | STATE: " + displayStatus[outStatus];
         dLines[5] = "";
         display.print(dLines, 6);
 
@@ -311,6 +343,8 @@ int OuroborosInit(){
 
     tempo.Init(sample_rate, &hw, rateKnob, &presetManager);
 
+    buttons.Init(&hw);
+
     // Initialize knobs
     adcConfig[rateKnob].InitSingle(hw.GetPin(15));
     adcConfig[fdbkKnob].InitSingle(hw.GetPin(16));
@@ -318,12 +352,6 @@ int OuroborosInit(){
     adcConfig[wowKnob].InitSingle(hw.GetPin(18));
     adcConfig[blendKnob].InitSingle(hw.GetPin(19));
     adcConfig[filtKnob].InitSingle(hw.GetPin(20));
-
-    // Initialize Buttons
-    buttons[programSw].Init(hw.GetPin(26), 1000);
-    buttons[divisionSw].Init(hw.GetPin(25), 1000);
-    buttons[tempoSw].Init(hw.GetPin(27), 1000);
-    buttons[toggleSw].Init(hw.GetPin(24), 1000);
 
     // Initialize LEDs - Mapped top to bottom from schematic
     LEDS[D0].Init(daisy::seed::D6, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
@@ -338,6 +366,7 @@ int OuroborosInit(){
     // Initialize Send/Stereo toggle switch
     // HIGH = Stereo, Low = Send (Low disables volume knob on output R)
     sendSw.Init(daisy::seed::D10, daisy::GPIO::Mode::OUTPUT, daisy::GPIO::Pull::NOPULL, daisy::GPIO::Speed::LOW);
+    sendSw.Write(false);
     
     //Initialize the adc with the config we just made
     hw.adc.Init(adcConfig, NUM_ADC_CHANNELS);
