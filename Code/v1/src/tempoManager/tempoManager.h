@@ -22,12 +22,13 @@ using namespace std::chrono;
 class tempoManager{
     private:
         float sample_rate;
-        uint64_t tapTempo = 300;    // Time in milliseconds
-        uint64_t knobTempo = 0;     // Time in milliseconds
+        float tapTempo = 300.0f;    // Time in milliseconds
+        float knobTempo = 0.0f;     // Time in milliseconds
+        float smoothed_tempo = 0.0f;
         uint64_t samples = 0;       // ticks passed 
 
         float delaybuf[5] = { };    // Knob debouncing buffer
-        uint64_t press[3];          // Tap tempo buffer
+        float press[3];          // Tap tempo buffer
         int bufCount = 0;           // Valid spots in tap tempo buffer
 
         bool overflow = true;       // overflowed maximum tap tempo delay time
@@ -52,7 +53,7 @@ class tempoManager{
         void pressEvent();
 
         //Returns a tempo if 3 pushes were registered, else -1
-        uint64_t getTempo();
+        float getTempo();
 
 };
 

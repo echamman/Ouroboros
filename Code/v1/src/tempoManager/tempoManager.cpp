@@ -47,12 +47,12 @@ void tempoManager::pressEvent(){
         tap = true;
         tapTempo = (press[0] - press[1]);
         // Translate samples into time in ms
-        tapTempo = (uint64_t)(((float)tapTempo / sample_rate) * 1000.0f);
+        tapTempo = ((tapTempo / sample_rate) * 1000.0f);
     }
 }
 
 //Returns a tempo if 3 pushes were registered, else return knob time. Time in ms
-uint64_t tempoManager::getTempo(){
+float tempoManager::getTempo(){
 
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
@@ -62,28 +62,20 @@ uint64_t tempoManager::getTempo(){
     float range = preset.getDelayRange();
     float delaytime;
 
-    // Handle knob debouncing
-    for(int i = 3; i >= 0; i--){
-        delaybuf[i+1] = delaybuf[i];
-    }
+    delaytime = (min + (delayKnob * range));
 
-    delaybuf[0] = delayKnob;
-
-    // Only update delay if knob has been turned sufficiently
-    if( 1 || delaybuf[0] == delaybuf[1] && delaybuf[0] == delaybuf[2]){
-        delaytime = (min + (delayKnob * range));
-
-        if(abs(delaytime - ((float)(knobTempo))/1000.0f) > 0.01f){
-            knobTempo = (int64_t)(delaytime*1000.0f);
-            tap = false;
-        }
+    if(abs(delaytime - ((knobTempo))/1000.0f) > 0.01f){
+        knobTempo = (delaytime*1000.0f);
+        tap = false;
     }
 
     // Return tap tempo if tapping has occured
     // Return knob tempo if knob has been turned
     if(tap){
-        return tapTempo;
+        fonepole(smoothed_tempo, tapTempo, 0.0001f);
+        return smoothed_tempo;
     }else{
-        return knobTempo;
+        fonepole(smoothed_tempo, knobTempo, 0.0001f);
+        return smoothed_tempo;
     }
 }

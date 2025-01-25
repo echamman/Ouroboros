@@ -80,7 +80,8 @@ int outStatus = mono;
 string displayStatus[NUM_STATES] = { "MON", "S/R", "STR"};
 
 // Declare a DelayLine of MAX_DELAY number of floats.
-static DelayLine<float, MAX_DELAY> del;
+static DelayLine<float, MAX_DELAY> DSY_SDRAM_BSS del;
+
 
 // Create ReverbSc, load it to SDRAM
 static ReverbSc DSY_SDRAM_BSS verb;
@@ -219,8 +220,9 @@ int main(void)
         const float minLoad = loadMeter.GetMinCpuLoad();
 
         // Read inputs and update delay and verb variables
+        updateDelay();
+
         if(doUpdate){
-            updateDelay();
             updateReverb();
             updateFlutter();
             updateFilter();
@@ -365,7 +367,7 @@ void updateDelay(){
 
     // Reads tempo from the tempo manager
     // TODO standardize tempo as either float in seconds or int64_t in ms
-    delaytime = ((float)tempo.getTempo()) / 1000.0f;
+    delaytime = (tempo.getTempo()) / 1000.0f;
     
     wetBlend = knobs.readKnob(blendKnob);
 
