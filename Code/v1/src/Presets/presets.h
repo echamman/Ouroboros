@@ -8,8 +8,9 @@
 #include <string>
 
 enum presetNames {
-    def = 0,
-    slapback,
+    large = 0,
+    medium,
+    small,
     NUM_PRESETS
 };
 
@@ -28,7 +29,7 @@ class presets{
     private:
         preset presetArr[NUM_PRESETS] = {
             {
-                "default",
+                "Long",
                 0.03f,
                 1.0f,
                 0.0f,
@@ -38,7 +39,17 @@ class presets{
                 1.0f
             },
             {
-                "slapback",
+                "Medium",
+                0.03f,
+                0.6f,
+                0.0f,
+                0.7f,
+                0.0f,
+                20000.0f,
+                1.0f
+            },
+            {
+                "Short",
                 0.03f,
                 0.3f,
                 0.0f,
