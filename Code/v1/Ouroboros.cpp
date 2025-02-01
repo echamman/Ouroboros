@@ -224,7 +224,7 @@ int main(void)
 
         if(doUpdate){
             updateReverb();
-            updateFlutter();
+            //updateFlutter();
             updateFilter();
         }
 
@@ -290,8 +290,8 @@ int main(void)
             dLines[1] = "TIME: " + std::to_string((int)(delaytime * 1000.0f)) + "ms / " + std::to_string(divisions);
             dLines[2] = "FDBK: " + std::to_string((int)(delayFDBK*100.00f)) +\
             " | SPACE: " + knobs.readKnobString(spaceKnob);
-            dLines[3] = "WOW: " + knobs.readKnobString(wowKnob) +\
-            " | BLEND: " + knobs.readKnobString(blendKnob);
+            //dLines[3] = "WOW: " + knobs.readKnobString(wowKnob) +
+            dLines[3] = "WOW: 0 | BLEND: " + knobs.readKnobString(blendKnob);
             dLines[4] = "FILT: " + knobs.readKnobString(filtKnob) + " | STATE: " + displayStatus[outStatus];
             dLines[5] = "";
             display.print(dLines, 6);
