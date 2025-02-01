@@ -18,6 +18,7 @@ void knobManager::Init(DaisySeed *seed){
     hw.adc.Start();
 }
 
+// Returns true if the knobs have been moved since last check
 bool knobManager::checkKnobs(){
 
     int val = 0;

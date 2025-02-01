@@ -119,7 +119,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
     float feedback, del_out, sig_outL, sig_outR;
     float verb_outL, verb_outR, wow_outL, wow_outR;
-    float wow_del_outL, wow_del_outR;
+    //float wow_del_outL, wow_del_outR;
 
     for(size_t i = 0; i < size; i += 2)
     {
@@ -131,7 +131,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         tempo.Process();
 
-        // Chorus Processing
+        /*// Chorus Processing
 
         flutter.Process(in[LEFT]);
         wow_outL = flutter.GetLeft();
@@ -143,6 +143,7 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 
         sig_outL = ((1-wow) * in[LEFT]) + (1.5 * wow * wow_outL);
         sig_outR = ((1-wow) * in[RIGHT]) + (1.5 * wow * wow_outR);
+        */
 
         // Delay Processing 
 
@@ -215,9 +216,9 @@ int main(void)
     {
 
         // get the current load (smoothed value and peak values)
-        const float avgLoad = loadMeter.GetAvgCpuLoad();
-        const float maxLoad = loadMeter.GetMaxCpuLoad();
-        const float minLoad = loadMeter.GetMinCpuLoad();
+        //const float avgLoad = loadMeter.GetAvgCpuLoad();
+        //const float maxLoad = loadMeter.GetMaxCpuLoad();
+        //const float minLoad = loadMeter.GetMinCpuLoad();
 
         // Read inputs and update delay and verb variables
         updateDelay();
@@ -349,7 +350,7 @@ int OuroborosInit(){
     tick.Init(4.0f, sample_rate);
 
     // initialize the load meter so that it knows what time is available for the processing:
-    loadMeter.Init(hw.AudioSampleRate(), hw.AudioBlockSize());
+    //loadMeter.Init(hw.AudioSampleRate(), hw.AudioBlockSize());
 
     // start callback
     hw.StartAudio(AudioCallback);
@@ -365,8 +366,7 @@ int OuroborosInit(){
 
 void updateDelay(){
 
-    // Reads tempo from the tempo manager
-    // TODO standardize tempo as either float in seconds or int64_t in ms
+    // Reads tempo as float from the tempo manager
     delaytime = (tempo.getTempo()) / 1000.0f;
     
     wetBlend = knobs.readKnob(blendKnob);
