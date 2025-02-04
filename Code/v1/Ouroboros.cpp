@@ -16,6 +16,8 @@ CpuLoadMeter loadMeter;
 // Set max delay time to 0.75 of samplerate.
 #define MAX_DELAY static_cast<size_t>(48000 * 0.75f)
 
+#define MAX_DIV 3
+
 enum LEDs {
     D0 = 0,
     D1,
@@ -242,7 +244,7 @@ int main(void)
 
             // Div button
             case 2: 
-                divisions = ((divisions) % 4) + 1;
+                divisions = ((divisions) % MAX_DIV) + 1;
                 doUpdate = true;
                 break;
 
@@ -367,7 +369,8 @@ int OuroborosInit(){
 void updateDelay(){
 
     // Reads tempo as float from the tempo manager
-    delaytime = (tempo.getTempo()) / 1000.0f;
+    delaytime = (tempo.getTempo(presetManager.getPreset())) / 1000.0f;
+    //delaytime = presetManager.getDelayMax()/1000.0f;
     
     wetBlend = knobs.readKnob(blendKnob);
 

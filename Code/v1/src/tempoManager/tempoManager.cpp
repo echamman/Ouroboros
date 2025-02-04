@@ -32,6 +32,9 @@ void tempoManager::resetCount(){
 // Records a button press
 void tempoManager::pressEvent(){
 
+    float min = preset.getDelayMin();
+    float max = preset.getDelayMax();
+
     // Move sample count through buffer
     for(int i = 2; i > 0; i--){
         press[i] = press[i-1];
@@ -48,12 +51,22 @@ void tempoManager::pressEvent(){
         tapTempo = (press[0] - press[1]);
         // Translate samples into time in ms
         tapTempo = ((tapTempo / sample_rate) * 1000.0f);
+
+        // Check if within range
+        if(tapTempo > max){
+            tapTempo = max;
+        }else if(tapTempo < min){
+            tapTempo = min;
+        }
     }
 }
 
 //Returns a tempo if 3 pushes were registered, else return knob time. Time in ms
-float tempoManager::getTempo(){
+float tempoManager::getTempo(int currPreset){
 
+    // Need this because for some reason the presetManager isn't being passed correctly
+    preset.setPreset(currPreset);
+    
     // Read and scale appropriate knobs
     // Read knob as float (0-0.99), truncate to two decimal points
     float delayKnob = knobMan.readKnob(rateKnob);
@@ -64,13 +77,14 @@ float tempoManager::getTempo(){
 
     delaytime = (min + (delayKnob * range));
 
-    if(abs(delaytime - ((knobTempo))/1000.0f) > 0.01f){
-        knobTempo = (delaytime*1000.0f);
+    if(abs(delaytime - knobTempo) > 0.01f){
+        knobTempo = delaytime;
         tap = false;
     }
 
     // Return tap tempo if tapping has occured
     // Return knob tempo if knob has been turned
+    
     if(tap){
         fonepole(smoothed_tempo, tapTempo, 0.0001f);
         return smoothed_tempo;

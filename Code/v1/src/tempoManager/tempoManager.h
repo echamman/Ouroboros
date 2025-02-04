@@ -53,7 +53,8 @@ class tempoManager{
         void pressEvent();
 
         //Returns a tempo if 3 pushes were registered, else -1
-        float getTempo();
+        //Needs preset value because of bug
+        float getTempo(int currPreset);
 
 };
 

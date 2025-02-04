@@ -39,6 +39,7 @@ class knobManager{
         float readKnob(int knob, float offset);
         string readKnobString(int knob);
         bool checkKnobs();
+        bool checkKnob(int knob);
 };
 
 #endif

@@ -35,6 +35,16 @@ bool knobManager::checkKnobs(){
     return false;
 }
 
+bool knobManager::checkKnob(int knob){
+
+    int val = (int)(readKnob(knob) * 100.0f);
+    
+    if(K[knob] != val){
+        K[knob] = val;
+        return true;
+    }
+}
+
 //Returns a float reading of the knob, 0.00 - 0.99
 float knobManager::readKnob(int knob){
 

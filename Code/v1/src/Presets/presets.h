@@ -16,8 +16,8 @@ enum presetNames {
 
 struct preset{
     std::string name;
-    float delaytimeMin;     // in s
-    float delaytimeMax;     // in s
+    float delaytimeMin;     // in ms
+    float delaytimeMax;     // in ms
     float reverbFDBKMin;    // 0 - 0.99
     float reverbFDBKMax;    // 0-0.99
     float HP;               // freq
@@ -30,8 +30,8 @@ class presets{
         preset presetArr[NUM_PRESETS] = {
             {
                 "Long",
-                0.03f,
-                1.0f,
+                30.0f,
+                2000.0f,
                 0.0f,
                 0.99f,
                 0.0f,
@@ -40,8 +40,8 @@ class presets{
             },
             {
                 "Medium",
-                0.03f,
-                0.6f,
+                30.0f,
+                1000.0f,
                 0.0f,
                 0.7f,
                 0.0f,
@@ -50,8 +50,8 @@ class presets{
             },
             {
                 "Short",
-                0.03f,
-                0.3f,
+                30.0f,
+                500.0f,
                 0.0f,
                 0.4f,
                 0.0f,
@@ -66,6 +66,10 @@ class presets{
 
         void setPreset(int presetNum){
             currentPreset = presetNum;
+        }
+
+        int getPreset(){
+            return currentPreset;
         }
 
         void nextPreset(){
